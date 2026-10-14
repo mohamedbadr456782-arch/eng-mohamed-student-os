@@ -31,6 +31,17 @@ body:not(.authenticated) .layout,body:not(.authenticated) .modal-bg,body:not(.au
 .welcome-transition{position:fixed;inset:0;z-index:1100;display:none;align-items:center;justify-content:center;flex-direction:column;gap:14px;background:#070911;color:var(--text);text-align:center;padding:22px}.welcome-transition.show{display:flex;animation:pop .35s both}.welcome-transition .auth-mark{margin:0 auto 8px;animation:glow 2.5s infinite}.welcome-transition h2{font-size:clamp(25px,5vw,42px);margin:0}.welcome-transition p{color:var(--muted);font-size:12px}
 @media(max-width:760px){.auth-shell{grid-template-columns:1fr;max-width:540px}.auth-brand{padding:22px}.auth-brand .auth-mark{margin-bottom:13px}.auth-brand p{margin-bottom:0}.auth-brand h1{font-size:29px}.auth-card-main{padding:22px}}
 
+
+.intro-screen{position:fixed;inset:0;z-index:1200;display:none;align-items:center;justify-content:center;padding:24px;background:radial-gradient(ellipse at 15% 5%,#6b4bd52a,transparent 38%),radial-gradient(ellipse at 90% 90%,#00c9b51c,transparent 35%),#070911}
+.intro-screen.show{display:flex;animation:rise .45s both}
+.intro-card{width:min(850px,100%);border:1px solid #35415d;border-radius:28px;padding:clamp(25px,5vw,52px);background:linear-gradient(145deg,#171532,#102b38);box-shadow:0 25px 90px #0008;text-align:center}
+.intro-mark{width:76px;height:76px;border-radius:24px;display:grid;place-items:center;margin:0 auto 22px;background:linear-gradient(135deg,var(--purple),#548dff 65%,var(--cyan));color:#080b14;font-weight:900;font-size:22px;box-shadow:0 0 45px #9a7bff44}
+.intro-card h1{font-size:clamp(28px,5vw,46px);line-height:1.35;margin:0 0 14px;font-weight:900}
+.intro-card h1 span{color:var(--cyan)}
+.intro-card p{max-width:620px;margin:0 auto;color:#c2cce1;font-size:14px;line-height:2}
+.intro-features{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin:24px 0}
+.intro-features span{padding:10px 13px;border:1px solid #ffffff18;background:#ffffff08;border-radius:12px;color:#e0e9fa;font-size:12px}
+
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -45,6 +56,18 @@ body:not(.authenticated) .layout,body:not(.authenticated) .modal-bg,body:not(.au
   </section>
  </div>
 </div>
+
+<div class="intro-screen" id="introScreen">
+ <section class="intro-card">
+  <div class="intro-mark">EM</div>
+  <div class="eyebrow">✦ YOUR PERSONAL STUDY SPACE</div>
+  <h1>أهلاً بيك في<br><span>ENG / MOHAMED</span></h1>
+  <p>منصتك الدراسية جاهزة. نظّم مهامك وواجباتك، رتّب جدولك الأسبوعي، احفظ ملاحظاتك، وتابع إنجازك كله من مكان واحد.</p>
+  <div class="intro-features"><span>✓ إدارة المهام</span><span>▦ الجدول الأسبوعي</span><span>✎ الملاحظات</span><span>✦ متابعة الإنجاز</span></div>
+  <button class="btn" id="enterPlatformBtn" type="button">دخول إلى الصفحة الرئيسية ←</button>
+ </section>
+</div>
+
 <div class="welcome-transition" id="welcomeTransition"><div class="auth-mark">EM</div><h2>أهلاً بيك في مساحتك الدراسية ✦</h2><p>بنجهّز لوحة الطالب الخاصة بيك...</p><div class="loader"></div></div>
 
 <div class="ambient"><div class="orb one"></div><div class="orb two"></div></div>
@@ -137,9 +160,10 @@ function showPlatform(user,withTransition=true){currentUser=user;loadAccountData
 function showGate(){document.body.classList.remove('authenticated');$('authGate').style.display='flex';$('welcomeTransition').classList.remove('show');$('splash').classList.add('hide');setAuthMode('login');}
 try{if(!window.supabase||!window.supabase.createClient){throw new Error('تعذّر تحميل مكتبة تسجيل الدخول. تأكد من اتصال الإنترنت ثم حدّث الصفحة.')}if(!SUPABASE_PUBLISHABLE_KEY || SUPABASE_PUBLISHABLE_KEY.includes('sb_publishable_mrXnjNtl0ju80y8-r-jeQA_kK1wgcbe')){throw new Error('حط Publishable Key الصحيح في ملف index.html قبل النشر.')}supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);}catch(err){gateMsg(err.message,'err');}
 $('gateLoginTab').addEventListener('click',()=>setAuthMode('login'));$('gateSignupTab').addEventListener('click',()=>setAuthMode('signup'));
-$('gateForm').addEventListener('submit',async e=>{e.preventDefault();clearGateMsg();if(!supabaseClient){gateMsg('إعداد تسجيل الدخول مش مكتمل. راجع مفتاح Supabase في ملف الموقع.','err');return;}const btn=$('gateSubmit'),email=$('gateEmail').value.trim(),password=$('gatePassword').value;btn.disabled=true;btn.textContent='لحظة بنراجع بياناتك...';try{if(authMode==='signup'){const {data,error}=await supabaseClient.auth.signUp({email,password,options:{data:{full_name:email.split('@')[0]},emailRedirectTo:'https://mohamedbadr456782-arch.github.io/eng-mohamed-student-os/'}});if(error)throw error;if(data.session&&data.user){gateMsg('الحساب اتعمل بنجاح. بنفتح منصتك دلوقتي ✨','ok');showPlatform(data.user,true);}else{setAuthMode('login');$('gateEmail').value=email;gateMsg('الحساب اتعمل. افتح رسالة تأكيد البريد الإلكتروني، وبعد التأكيد ارجع وسجّل الدخول.','ok');}}else{const {data,error}=await supabaseClient.auth.signInWithPassword({email,password});if(error)throw error;if(!data.session||!data.user)throw new Error('تم التحقق لكن مفيش جلسة دخول. جرّب تاني.');gateMsg('تم تسجيل الدخول بنجاح. بنفتح المنصة...','ok');showPlatform(data.user,true);}}catch(err){gateMsg(err.message||'حصل خطأ. راجع البريد وكلمة المرور.','err');}finally{btn.disabled=false;btn.textContent=authMode==='signup'?'إنشاء حساب':'تسجيل الدخول ←';}});
+$('gateForm').addEventListener('submit',async e=>{e.preventDefault();clearGateMsg();if(!supabaseClient){gateMsg('إعداد تسجيل الدخول مش مكتمل. راجع مفتاح Supabase في ملف الموقع.','err');return;}const btn=$('gateSubmit'),email=$('gateEmail').value.trim(),password=$('gatePassword').value;btn.disabled=true;btn.textContent='لحظة بنراجع بياناتك...';try{if(authMode==='signup'){const {data,error}=await supabaseClient.auth.signUp({email,password,options:{data:{full_name:email.split('@')[0]},emailRedirectTo:'https://mohamedbadr456782-arch.github.io/eng-mohamed-student-os/'}});if(error)throw error;if(data.session&&data.user){gateMsg('الحساب اتعمل بنجاح. بنفتح منصتك دلوقتي ✨','ok');showPlatform(data.user,false);$('introScreen').classList.add('show');}else{setAuthMode('login');$('gateEmail').value=email;gateMsg('الحساب اتعمل. افتح رسالة تأكيد البريد الإلكتروني، وبعد التأكيد ارجع وسجّل الدخول.','ok');}}else{const {data,error}=await supabaseClient.auth.signInWithPassword({email,password});if(error)throw error;if(!data.session||!data.user)throw new Error('تم التحقق لكن مفيش جلسة دخول. جرّب تاني.');gateMsg('تم تسجيل الدخول بنجاح. بنفتح المنصة...','ok');showPlatform(data.user,false);$('introScreen').classList.add('show');}}catch(err){gateMsg(err.message||'حصل خطأ. راجع البريد وكلمة المرور.','err');}finally{btn.disabled=false;btn.textContent=authMode==='signup'?'إنشاء حساب':'تسجيل الدخول ←';}});
 $('gateForgot').addEventListener('click',async()=>{clearGateMsg();if(!supabaseClient){gateMsg('إعداد تسجيل الدخول مش مكتمل.','err');return;}const email=$('gateEmail').value.trim();if(!email){gateMsg('اكتب بريدك الإلكتروني الأول، وبعدها اضغط نسيت كلمة المرور.','err');return;}try{const {error}=await supabaseClient.auth.resetPasswordForEmail(email,{redirectTo:'https://mohamedbadr456782-arch.github.io/eng-mohamed-student-os/'});if(error)throw error;gateMsg('لو البريد مسجل، هتوصلك رسالة استعادة. راجع الوارد والـ Spam.','ok');}catch(err){gateMsg(err.message||'تعذّر إرسال رسالة الاستعادة.','err');}});
 $('accountLogout').addEventListener('click',async()=>{if(!supabaseClient)return;const {error}=await supabaseClient.auth.signOut();if(error){toast('تعذّر تسجيل الخروج: '+error.message);return;}currentUser=null;showGate();});
+$('enterPlatformBtn').addEventListener('click',()=>{$('introScreen').classList.remove('show');$('splash').classList.remove('hide');setTimeout(()=>$('splash').classList.add('hide'),900);});
 if(supabaseClient){supabaseClient.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_OUT'){currentUser=null;showGate();}});supabaseClient.auth.getSession().then(({data,error})=>{if(!error&&data.session&&data.session.user)showPlatform(data.session.user,false);else showGate();}).catch(()=>showGate());}else{showGate();}
 })();
 </script>
