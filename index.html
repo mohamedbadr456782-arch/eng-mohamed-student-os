@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ENG / MOHAMED — Student OS</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap');
+:root{--bg:#080b14;--surface:#101624;--surface2:#151e30;--stroke:#26334b;--text:#f3f6ff;--muted:#9aa8c2;--purple:#9a7bff;--cyan:#52e5d1;--pink:#ff77b7;--green:#6de0a5;--red:#ff6f86;--yellow:#ffc66d;--radius:20px}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font-family:'Cairo','Segoe UI',Tahoma,sans-serif;min-height:100vh;overflow-x:hidden}button,input,textarea,select{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+.ambient{position:fixed;inset:0;z-index:-2;overflow:hidden;pointer-events:none;background:radial-gradient(ellipse at 80% 5%,#4c31a326,transparent 35%),radial-gradient(ellipse at 10% 80%,#087b8720,transparent 32%)}.orb{position:absolute;width:340px;height:340px;border-radius:50%;filter:blur(85px);opacity:.22;animation:float 15s ease-in-out infinite alternate}.orb.one{background:#7759ff;top:10%;right:-180px}.orb.two{background:#19b9c9;bottom:-200px;left:-130px;animation-delay:-7s}@keyframes float{to{transform:translate(45px,-35px) scale(1.12)}}@keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}@keyframes glow{0%,100%{box-shadow:0 0 18px #9a7bff20}50%{box-shadow:0 0 30px #9a7bff55}}@keyframes spin{to{transform:rotate(360deg)}}@keyframes shimmer{to{background-position:200% center}}@keyframes pop{0%{transform:scale(.92);opacity:0}70%{transform:scale(1.02)}100%{transform:scale(1);opacity:1}}@keyframes sweep{from{transform:translateX(-130%)}to{transform:translateX(130%)}}
+.splash{position:fixed;inset:0;z-index:100;background:#080b14;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:18px;transition:opacity .7s,visibility .7s}.splash.hide{opacity:0;visibility:hidden;pointer-events:none}.splash-logo{width:100px;height:100px;border-radius:30px;display:grid;place-items:center;background:linear-gradient(135deg,#9a7bff,#4a9cff 55%,#52e5d1);font-weight:900;font-size:29px;letter-spacing:-2px;color:#080b14;box-shadow:0 0 65px #8c6bff55;animation:pop .7s both,glow 2.5s infinite}.splash-name{font-size:clamp(25px,5vw,42px);font-weight:900;letter-spacing:1px}.splash-name span{color:var(--cyan)}.splash-sub{color:var(--muted);font-size:12px;letter-spacing:4px}.loader{width:150px;height:3px;border-radius:5px;background:#1c2639;overflow:hidden;margin-top:12px}.loader:after{content:"";display:block;width:40%;height:100%;background:linear-gradient(90deg,var(--purple),var(--cyan));animation:load 1.5s ease-in-out infinite}@keyframes load{from{transform:translateX(250%)}to{transform:translateX(-350%)}}
+.layout{display:grid;grid-template-columns:255px minmax(0,1fr);min-height:100vh}.sidebar{position:sticky;top:0;height:100vh;padding:24px 17px;background:#0b101ddd;border-left:1px solid #ffffff0c;backdrop-filter:blur(18px);display:flex;flex-direction:column;gap:25px}.brand{display:flex;align-items:center;gap:12px;padding:0 7px}.brand-icon{width:46px;height:46px;display:grid;place-items:center;border-radius:15px;background:linear-gradient(135deg,var(--purple),#548dff 65%,var(--cyan));color:#090d18;font-weight:900;font-size:15px;box-shadow:0 7px 22px #8c70ff33}.brand-title{font-size:14px;font-weight:900;line-height:1.35;letter-spacing:.4px}.brand-title span{color:var(--cyan)}.brand-sub{font-size:9px;color:var(--muted);letter-spacing:2px;margin-top:4px}.nav-label{color:#64718d;font-size:10px;padding:0 13px;margin-bottom:-14px;letter-spacing:1px}.nav{display:grid;gap:7px}.nav button{position:relative;border:1px solid transparent;border-radius:13px;background:transparent;color:var(--muted);text-align:right;padding:12px 13px;display:flex;align-items:center;gap:12px;transition:transform .22s,background .22s,color .22s,border .22s;overflow:hidden}.nav button:before{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent,#ffffff0b,transparent);transform:translateX(130%);transition:transform .5s}.nav button:hover:before{transform:translateX(-130%)}.nav button:hover{transform:translateX(-3px);color:var(--text);background:#ffffff08}.nav button.active{color:white;background:linear-gradient(100deg,#9a7bff20,#52e5d10a);border-color:#9a7bff2c;box-shadow:inset -3px 0 var(--purple)}.nav-ico{width:25px;height:25px;display:grid;place-items:center;border-radius:8px;background:#ffffff08;font-size:15px}.side-bottom{margin-top:auto;border:1px solid var(--stroke);background:linear-gradient(135deg,#9a7bff12,#52e5d10b);padding:15px;border-radius:16px}.online{display:flex;align-items:center;gap:7px;color:var(--cyan);font-size:10px}.dot{width:7px;height:7px;background:var(--green);border-radius:50%;box-shadow:0 0 12px var(--green)}.side-bottom p{font-size:11px;color:var(--muted);line-height:1.9;margin:9px 0 0}
+main{width:100%;max-width:1600px;margin:auto;padding:28px clamp(16px,3vw,44px) 45px;min-width:0}.topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:27px;animation:rise .5s both}.eyebrow{color:var(--cyan);font-size:11px;font-weight:700;letter-spacing:.5px}.topbar h1{font-size:clamp(23px,3vw,32px);margin:5px 0 0;line-height:1.5}.top-actions{display:flex;align-items:center;gap:9px}.date-pill,.mini-btn{border:1px solid var(--stroke);background:#111827b8;color:var(--muted);padding:10px 13px;border-radius:12px;font-size:11px}.btn{position:relative;overflow:hidden;border:0;border-radius:12px;padding:11px 16px;font-weight:800;color:#080b14;background:linear-gradient(120deg,var(--purple),#7896ff 55%,var(--cyan));box-shadow:0 7px 22px #8e7aff28;transition:transform .2s,filter .2s}.btn:after{content:"";position:absolute;top:-20%;bottom:-20%;width:35%;background:#ffffff3d;transform:translateX(300%) skewX(-20deg)}.btn:hover:after{animation:sweep .65s}.btn:hover{transform:translateY(-2px);filter:brightness(1.08)}.btn:active{transform:scale(.97)}.btn-secondary{background:#182238;border:1px solid var(--stroke);color:var(--text);box-shadow:none}.view{display:none}.view.active{display:block;animation:rise .4s both}.hero{position:relative;overflow:hidden;border:1px solid #9a7bff26;border-radius:24px;padding:25px 28px;background:linear-gradient(110deg,#201d42 0%,#172b42 60%,#10333b 100%);display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:19px}.hero:after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 35%,#ffffff07 50%,transparent 65%);background-size:200% 100%;animation:shimmer 8s linear infinite;pointer-events:none}.hero h2{font-size:22px;margin:0 0 7px}.hero p{font-size:12px;color:#c2cce1;line-height:1.9;margin:0;max-width:650px}.hero-logo{flex:0 0 auto;width:76px;height:76px;border-radius:23px;display:grid;place-items:center;background:#080d1a66;border:1px solid #ffffff18;font-weight:900;font-size:18px;letter-spacing:-1px;box-shadow:inset 0 0 24px #9a7bff1a;transform:rotate(3deg);transition:transform .3s}.hero-logo:hover{transform:rotate(0) scale(1.07)}.hero-logo span{color:var(--cyan)}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin-bottom:18px}.stat,.panel{background:linear-gradient(145deg,#111827eF,#0f1523f2);border:1px solid var(--stroke);border-radius:18px;padding:18px;min-width:0;transition:transform .23s,border-color .23s,box-shadow .23s}.stat:hover,.panel:hover{transform:translateY(-3px);border-color:#9a7bff55;box-shadow:0 14px 35px #0002}.stat-head{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:11px}.stat-ico{width:35px;height:35px;border-radius:11px;display:grid;place-items:center;background:#9a7bff1a;font-size:16px;transition:transform .3s}.stat:hover .stat-ico{transform:rotate(-8deg) scale(1.1)}.stat strong{display:block;font-size:29px;margin-top:10px;font-weight:900}.stat small{font-size:10px;color:var(--muted)}.content-grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(270px,.8fr);gap:15px}.panel-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:15px}.panel-head h3{font-size:14px;margin:0}.text-link{background:transparent;color:var(--cyan);font-size:11px}.task-list{display:grid;gap:9px}.task-row{display:flex;align-items:flex-start;gap:11px;padding:12px;border:1px solid #ffffff0b;background:#ffffff03;border-radius:13px;animation:rise .3s both;transition:background .2s,border-color .2s,transform .2s}.task-row:hover{background:#ffffff08;border-color:#9a7bff33;transform:translateX(-2px)}.check{appearance:none;width:19px;height:19px;flex:0 0 19px;border:1px solid #66748f;border-radius:6px;margin-top:3px;cursor:pointer;transition:.2s;position:relative}.check:checked{background:var(--cyan);border-color:var(--cyan);transform:scale(1.05)}.check:checked:after{content:'✓';position:absolute;inset:-1px 0 0;text-align:center;color:#06131b;font-weight:900;font-size:13px}.task-main{flex:1;min-width:0}.task-title{font-size:12px;font-weight:800;overflow-wrap:anywhere}.task-row.done .task-title{text-decoration:line-through;color:#8190aa}.task-meta{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin-top:7px;color:var(--muted);font-size:10px}.badge{display:inline-flex;align-items:center;border-radius:7px;padding:3px 7px;background:#9a7bff1c;color:#c7bbff;font-size:9px}.badge.high{background:#ff6f861b;color:#ff9cad}.badge.low{background:#52e5d11b;color:#83f0e1}.badge.medium{background:#ffc66d1b;color:#ffd48c}.task-actions{display:flex;gap:3px}.icon-btn{background:transparent;color:var(--muted);border-radius:8px;padding:4px 7px;transition:.2s}.icon-btn:hover{background:#ffffff10;color:white;transform:scale(1.1)}.empty{padding:25px 10px;text-align:center;color:var(--muted);font-size:12px;line-height:1.9}.empty span{display:block;font-size:28px;margin-bottom:7px}.progress-label{display:flex;justify-content:space-between;font-size:11px;margin-bottom:8px}.track{height:8px;border-radius:20px;background:#263249;overflow:hidden}.bar{height:100%;width:0;background:linear-gradient(90deg,var(--purple),var(--cyan));border-radius:20px;transition:width .8s cubic-bezier(.2,.8,.2,1);position:relative}.bar:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,#ffffff65,transparent);animation:shimmer 2.5s linear infinite}.quote{color:var(--muted);font-size:11px;line-height:2;margin:0}.section-head{margin:4px 0 18px}.section-head h2{margin:0 0 5px;font-size:22px}.section-head p{color:var(--muted);font-size:12px;margin:0}.toolbar{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:15px}.field{background:#0b1220;border:1px solid var(--stroke);border-radius:11px;padding:10px 12px;color:var(--text);min-width:0}.field::placeholder{color:#71809d}.toolbar .field{flex:1;min-width:135px}.task-manager{display:grid;gap:9px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}.group{display:grid;gap:7px}.group.full{grid-column:1/-1}.group label{font-size:11px;color:var(--muted)}textarea.field{resize:vertical;min-height:88px}.modal-bg{position:fixed;inset:0;background:#02040bd9;z-index:30;display:none;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(9px)}.modal-bg.open{display:flex}.modal{width:min(570px,100%);max-height:92vh;overflow:auto;background:#111827;border:1px solid #35415d;border-radius:22px;padding:22px;box-shadow:0 25px 90px #0009;animation:pop .22s both}.modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:17px}.modal-head h3{margin:0;font-size:17px}.close{background:transparent;color:var(--muted);font-size:24px}.form-actions{display:flex;gap:9px;margin-top:17px}.schedule-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:9px}.day{border:1px solid var(--stroke);background:var(--surface);border-radius:15px;padding:12px;transition:.2s}.day:focus-within,.day:hover{border-color:#52e5d166;transform:translateY(-2px)}.day h4{font-size:11px;color:var(--cyan);margin:0 0 10px}.day textarea{width:100%;height:120px;background:transparent;border:0;color:var(--text);resize:vertical;font-size:11px;line-height:1.8;outline:none}.note-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.note-card{border:1px solid var(--stroke);background:linear-gradient(145deg,#131c2d,#101624);border-radius:16px;padding:15px;min-height:150px;display:flex;flex-direction:column;gap:9px;animation:rise .35s both;transition:.2s}.note-card:hover{transform:translateY(-4px) rotate(-.3deg);border-color:#52e5d155}.note-card h4{font-size:13px;margin:0;overflow-wrap:anywhere}.note-card p{font-size:11px;color:#c0cbe0;line-height:1.9;white-space:pre-wrap;overflow-wrap:anywhere;flex:1;margin:0}.note-foot{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:9px}.toast{position:fixed;bottom:22px;left:22px;z-index:50;display:none;background:#15243a;border:1px solid #52e5d155;border-radius:13px;padding:12px 16px;font-size:12px;box-shadow:0 10px 35px #0005}.toast.show{display:block;animation:pop .2s both}.footer{text-align:center;color:#5f6c85;font-size:10px;margin-top:26px}.footer b{color:var(--cyan);font-weight:800}.menu-toggle{display:none}
+@media(max-width:1080px){.quick-tools{grid-template-columns:1fr 1fr!important}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.schedule-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.note-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){.quick-tools{grid-template-columns:1fr!important}.layout{grid-template-columns:1fr}.sidebar{position:relative;height:auto;padding:13px;gap:13px;border-left:0;border-bottom:1px solid #ffffff10}.nav-label,.side-bottom{display:none}.nav{display:flex;overflow-x:auto;gap:5px;padding-bottom:2px}.nav button{white-space:nowrap;padding:9px 10px;font-size:11px}.nav button.active{box-shadow:inset 0 -3px var(--purple)}main{padding:20px 13px 30px}.topbar{align-items:flex-start;flex-wrap:wrap}.top-actions{width:100%;justify-content:space-between}.hero{padding:19px}.hero-logo{width:58px;height:58px;border-radius:18px;font-size:14px}.hero h2{font-size:18px}.content-grid{grid-template-columns:1fr}.schedule-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.note-grid{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr}.group.full{grid-column:auto}}
+@media(max-width:390px){.stats{gap:8px}.stat{padding:12px}.stat strong{font-size:24px}.date-pill{display:none}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}
+
+/* Intro / onboarding experience */
+.intro-screen{position:fixed;inset:0;z-index:120;display:flex;align-items:center;justify-content:center;padding:22px;background:radial-gradient(ellipse at 50% 0%,#36256855,transparent 48%),#070a13;overflow:hidden;transition:opacity .65s,visibility .65s}
+.intro-screen.finished{opacity:0;visibility:hidden;pointer-events:none}
+.intro-grid{position:absolute;inset:0;background-image:linear-gradient(#ffffff08 1px,transparent 1px),linear-gradient(90deg,#ffffff08 1px,transparent 1px);background-size:48px 48px;mask-image:linear-gradient(to bottom,#000,transparent 92%);opacity:.45;animation:gridDrift 24s linear infinite}
+@keyframes gridDrift{to{background-position:48px 48px}}
+.intro-orb{position:absolute;border-radius:50%;filter:blur(2px);pointer-events:none;animation:orbFloat 7s ease-in-out infinite alternate}
+.intro-orb.a{width:210px;height:210px;right:7%;top:12%;background:radial-gradient(circle,#9a7bff44,transparent 70%)}
+.intro-orb.b{width:260px;height:260px;left:5%;bottom:5%;background:radial-gradient(circle,#52e5d133,transparent 70%);animation-delay:-3s}
+@keyframes orbFloat{to{transform:translate(25px,-22px) scale(1.12)}}
+.intro-wrap{position:relative;width:min(900px,100%);min-height:min(620px,calc(100vh - 44px));display:flex;flex-direction:column;justify-content:space-between;gap:20px}
+.intro-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.intro-brand{display:flex;align-items:center;gap:10px;font-weight:900;letter-spacing:.5px;font-size:13px}
+.intro-brand-mark{width:37px;height:37px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(135deg,var(--purple),#548dff 65%,var(--cyan));color:#080b14}
+.intro-skip{color:var(--muted);background:#ffffff08;border:1px solid #ffffff16;padding:8px 13px;border-radius:11px;font-size:11px;transition:.2s}
+.intro-skip:hover{color:white;border-color:#9a7bff88;transform:translateY(-1px)}
+.intro-stage{display:grid;grid-template-columns:1.1fr .9fr;align-items:center;gap:35px;flex:1}
+.intro-copy{animation:slideIn .6s both}
+@keyframes slideIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.intro-kicker{display:inline-flex;align-items:center;gap:8px;border:1px solid #52e5d133;background:#52e5d10b;color:var(--cyan);border-radius:30px;padding:7px 11px;font-size:10px;letter-spacing:1px;margin-bottom:18px}
+.intro-kicker i{width:6px;height:6px;background:var(--cyan);border-radius:50%;box-shadow:0 0 12px var(--cyan)}
+.intro-title{font-size:clamp(32px,5vw,58px);line-height:1.2;letter-spacing:-1.2px;margin:0 0 17px;font-weight:900}
+.intro-title span{display:block;color:transparent;background:linear-gradient(100deg,#bba9ff,var(--cyan),#a4c7ff);background-size:200% auto;background-clip:text;-webkit-background-clip:text;animation:shimmer 4s linear infinite}
+.intro-description{font-size:13px;color:#aebbd3;line-height:2.1;max-width:490px;margin:0}
+.intro-feature-list{display:flex;gap:8px;flex-wrap:wrap;margin-top:22px}
+.intro-feature-list span{border:1px solid #ffffff13;background:#ffffff06;border-radius:9px;padding:7px 10px;color:#cbd4e8;font-size:10px}
+.intro-visual{min-height:310px;position:relative;display:grid;place-items:center;animation:visualEnter .85s both}
+@keyframes visualEnter{from{opacity:0;transform:scale(.88) rotate(2deg)}to{opacity:1;transform:scale(1) rotate(0)}}
+.intro-core{width:170px;height:170px;border-radius:48px;display:grid;place-items:center;position:relative;background:linear-gradient(145deg,#9a7bff2e,#52e5d115);border:1px solid #b6a3ff55;box-shadow:0 0 70px #8e71ff22,inset 0 0 40px #9a7bff10;transform:rotate(-7deg);animation:coreFloat 4s ease-in-out infinite}
+.intro-core:before{content:"";position:absolute;inset:-13px;border:1px solid #52e5d144;border-radius:55px;animation:ringPulse 3.2s ease-out infinite}
+.intro-core:after{content:"";position:absolute;inset:-28px;border:1px dashed #9a7bff55;border-radius:65px;animation:spin 22s linear infinite}
+@keyframes coreFloat{50%{transform:translateY(-9px) rotate(-3deg)}}@keyframes ringPulse{0%{transform:scale(.94);opacity:.8}100%{transform:scale(1.18);opacity:0}}
+.intro-monogram{font-size:39px;font-weight:900;letter-spacing:-4px;color:#f3f6ff;transform:rotate(7deg)}.intro-monogram span{color:var(--cyan)}
+.float-card{position:absolute;display:flex;align-items:center;gap:9px;padding:11px 13px;background:#111a2ce8;border:1px solid #ffffff1c;border-radius:14px;box-shadow:0 14px 35px #0004;backdrop-filter:blur(12px);font-size:10px;color:#dce5f7;animation:cardFloat 4s ease-in-out infinite}
+.float-card b{display:block;font-size:10px}.float-card small{display:block;color:var(--muted);font-size:9px;margin-top:3px}.float-ico{width:31px;height:31px;display:grid;place-items:center;background:#9a7bff20;border-radius:9px;font-size:15px}
+.card-one{top:11%;right:0}.card-two{bottom:13%;left:0;animation-delay:-1.7s}.card-three{bottom:2%;right:15%;animation-delay:-.8s}
+@keyframes cardFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+.intro-bottom{display:flex;align-items:center;justify-content:space-between;gap:15px;border-top:1px solid #ffffff12;padding-top:18px}
+.intro-progress{display:flex;align-items:center;gap:7px}.intro-dot{width:7px;height:7px;border-radius:10px;background:#3a455d;transition:all .35s}.intro-dot.active{width:25px;background:linear-gradient(90deg,var(--purple),var(--cyan));box-shadow:0 0 14px #9a7bff55}
+.intro-step{font-size:10px;color:var(--muted);margin-right:10px}
+.intro-next{min-width:145px;display:flex;justify-content:center;align-items:center;gap:10px}
+.intro-next .arrow{font-size:16px;transition:transform .2s}.intro-next:hover .arrow{transform:translateX(-4px)}
+.intro-screen[data-step="1"] .intro-title,.intro-screen[data-step="1"] .intro-copy{animation:slideIn .45s both}
+@media(max-width:700px){.intro-wrap{min-height:calc(100vh - 36px)}.intro-stage{grid-template-columns:1fr;gap:4px;text-align:center;align-content:center}.intro-copy{order:1}.intro-visual{order:0;min-height:210px}.intro-core{width:112px;height:112px;border-radius:35px}.intro-monogram{font-size:29px}.float-card{padding:8px}.card-one{top:0;right:4%}.card-two{bottom:2%;left:1%}.card-three{bottom:-4%;right:35%}.intro-title{font-size:clamp(29px,8vw,42px)}.intro-description{margin:auto}.intro-feature-list{justify-content:center;margin-top:14px}.intro-bottom{padding-top:13px}.intro-kicker{margin-bottom:11px}}
+@media(prefers-reduced-motion:reduce){.intro-grid,.intro-orb,.intro-core,.intro-core:before,.intro-core:after,.float-card{animation:none!important}}
+
+
+/* PREMIUM ENG / MOHAMED visual system */
+:root{--bg:#070911;--surface:#0e1422;--surface2:#141d30;--stroke:#27334b;--text:#f4f6ff;--muted:#96a4bf;--purple:#a28aff;--cyan:#55f0d6;--pink:#ff7dc4;--green:#74edb0;--red:#ff718d;--yellow:#ffd17b;--radius:21px}
+body{background:#070911}
+.ambient{background:radial-gradient(ellipse at 80% 0%,#6943dd2b,transparent 35%),radial-gradient(ellipse at 0% 75%,#00cdb51c,transparent 32%),linear-gradient(130deg,#070911,#0b1020 55%,#080b14)}
+.orb{opacity:.29;filter:blur(95px)}
+.sidebar{background:rgba(8,11,20,.91);border-left:1px solid #ffffff10;box-shadow:-10px 0 45px #0002}
+.brand-icon{position:relative;isolation:isolate;overflow:hidden}
+.brand-icon:after{content:"";position:absolute;inset:-60%;background:linear-gradient(110deg,transparent 40%,#ffffff8a 50%,transparent 60%);transform:translateX(-120%) rotate(25deg);animation:logoSweep 5s ease-in-out infinite;z-index:-1}
+@keyframes logoSweep{0%,55%{transform:translateX(-120%) rotate(25deg)}80%,100%{transform:translateX(120%) rotate(25deg)}}
+.brand-title{letter-spacing:.8px}
+.nav button{padding:13px;border-radius:14px}
+.nav button.active{background:linear-gradient(100deg,#a28aff25,#55f0d60d);border-color:#a28aff3b;box-shadow:inset -3px 0 var(--purple),0 8px 24px #0002}
+.topbar{margin-bottom:25px}
+.topbar h1{letter-spacing:-.7px}
+.eyebrow{letter-spacing:1.4px;text-transform:uppercase}
+.hero{min-height:205px;padding:29px 32px;border-radius:25px;background:linear-gradient(112deg,#1d1940 0%,#172943 53%,#0d3338 100%);box-shadow:inset 0 1px #ffffff13,0 20px 50px #0002}
+.hero:before{content:"";position:absolute;width:240px;height:240px;border:1px solid #ffffff0b;border-radius:50%;left:8%;top:-125px;box-shadow:0 0 0 28px #ffffff04,0 0 0 56px #ffffff03;animation:orbitSlow 18s linear infinite}
+@keyframes orbitSlow{to{transform:rotate(360deg)}}
+.hero h2{font-size:25px;letter-spacing:-.5px}
+.hero p{max-width:610px;font-size:13px}
+.hero-logo{width:91px;height:91px;border-radius:28px;font-size:20px;background:linear-gradient(145deg,#ffffff12,#ffffff03);box-shadow:inset 0 0 35px #9a7bff1c,0 0 32px #9a7bff12;position:relative}
+.hero-logo:after{content:"";position:absolute;inset:-7px;border:1px solid #55f0d633;border-radius:31px;animation:ringPulse 3.2s ease-out infinite}
+.stats{gap:15px}
+.stat{padding:20px;position:relative;overflow:hidden}
+.stat:after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 35%,#ffffff06 50%,transparent 65%);transform:translateX(120%);transition:transform .6s}
+.stat:hover:after{transform:translateX(-120%)}
+.stat strong{font-variant-numeric:tabular-nums;font-size:32px;letter-spacing:-1px}
+.stat-ico{width:39px;height:39px;border:1px solid #a28aff1d;background:linear-gradient(145deg,#a28aff23,#55f0d60b)}
+.panel{padding:21px}
+.panel-head h3{font-size:15px}
+.task-row{padding:14px}
+.task-title{font-size:13px}
+.badge{border:1px solid #a28aff14}
+.btn{background:linear-gradient(110deg,#b09aff,#7c9cff 52%,#55f0d6);background-size:150% 100%;transition:transform .2s,filter .2s,background-position .5s}
+.btn:hover{background-position:100% 0}
+.field{background:#0a101c;border-color:#2a3751;transition:border-color .2s,box-shadow .2s}
+.field:focus{border-color:#55f0d688;box-shadow:0 0 0 3px #55f0d610;outline:none}
+.day{min-height:185px;background:linear-gradient(145deg,#111a2b,#0c1220)}
+.day h4{font-size:12px}
+.note-card{background:linear-gradient(145deg,#141d30,#0c1220)}
+.intro-screen{background:radial-gradient(ellipse at 50% 0%,#3a246b66,transparent 48%),#070911}
+.intro-wrap{width:min(1040px,100%)}
+.intro-title{letter-spacing:-1.6px}
+.intro-visual{min-height:360px}
+.intro-core{width:185px;height:185px;border-radius:52px}
+.intro-core:before{inset:-16px;border-radius:60px}
+.intro-core:after{inset:-35px;border-radius:72px}
+.intro-monogram{font-size:43px}
+.intro-brand-mark{box-shadow:0 0 25px #9a7bff2b}
+.float-card{border-color:#ffffff24;background:linear-gradient(145deg,#151f32ed,#0d1423ed);box-shadow:0 18px 45px #0005}
+.card-one{right:-2%}.card-two{left:-4%}.card-three{right:21%;bottom:0}
+.intro-bottom{border-top-color:#ffffff18}
+
+</style>
+</head>
+<body>
+<div class="ambient"><div class="orb one"></div><div class="orb two"></div></div>
+
+<div class="intro-screen" id="introScreen" data-step="0" aria-label="مقدمة منصة ENG MOHAMED">
+ <div class="intro-grid"></div><div class="intro-orb a"></div><div class="intro-orb b"></div>
+ <div class="intro-wrap">
+  <div class="intro-top"><div class="intro-brand"><div class="intro-brand-mark">M.</div><span>ENG / MOHAMED</span></div><button class="intro-skip" id="introSkip">تخطي المقدمة ↗</button></div>
+  <div class="intro-stage">
+   <div class="intro-copy" id="introCopy">
+    <div class="intro-kicker"><i></i><span id="introKicker">YOUR SPACE. YOUR RULES.</span></div>
+    <h1 class="intro-title" id="introTitle">أهلاً بيك في<br><span>مساحتك الخاصة.</span></h1>
+    <p class="intro-description" id="introDescription">مش مجرد قائمة مهام؛ دي منصتك الشخصية اللي هتساعدك ترتب دراستك، تتابع أهدافك، وتحول يومك لخطة واضحة.</p>
+    <div class="intro-feature-list" id="introFeatures"><span>✦ تنظيم أذكى</span><span>◷ وقتك بإيدك</span><span>✓ إنجاز كل يوم</span></div>
+   </div>
+   <div class="intro-visual" id="introVisual" aria-hidden="true">
+    <div class="intro-core"><div class="intro-monogram">ENG<span>/M</span></div></div>
+    <div class="float-card card-one"><div class="float-ico">✓</div><div><b>مهمة جديدة</b><small>خطوة أقرب لهدفك</small></div></div>
+    <div class="float-card card-two"><div class="float-ico">◷</div><div><b>وقتك مهم</b><small>خطط ليومك بسهولة</small></div></div>
+    <div class="float-card card-three"><div class="float-ico">↗</div><div><b>تقدم مستمر</b><small>كل إنجاز بيفرق</small></div></div>
+   </div>
+  </div>
+  <div class="intro-bottom"><div class="intro-progress"><span class="intro-dot active"></span><span class="intro-dot"></span><span class="intro-dot"></span><span class="intro-dot"></span><span class="intro-step" id="introStepText">01 / 04</span></div><button class="btn intro-next" id="introNext"><span id="introNextText">خلّينا نبدأ</span><span class="arrow">←</span></button></div>
+ </div>
+</div>
+
+<div class="splash" id="splash"><div class="splash-logo">M.</div><div class="splash-name">ENG / <span>MOHAMED</span></div><div class="splash-sub">STUDENT OS • YOUR PERSONAL SPACE</div><div class="loader"></div></div>
+<div class="layout">
+<aside class="sidebar">
+  <div class="brand"><div class="brand-icon">M.</div><div><div class="brand-title">ENG / <span>MOHAMED</span></div><div class="brand-sub">STUDENT OS</div></div></div>
+  <div class="nav-label">WORKSPACE / مساحة العمل</div>
+  <nav class="nav" aria-label="القائمة الرئيسية">
+    <button class="active" data-view="dashboard"><span class="nav-ico">⌂</span> الرئيسية</button>
+    <button data-view="tasks"><span class="nav-ico">✓</span> المهام</button>
+    <button data-view="schedule"><span class="nav-ico">▦</span> الجدول الأسبوعي</button>
+    <button data-view="notes"><span class="nav-ico">✎</span> الملاحظات</button>
+  </nav>
+  <div class="side-bottom"><div class="online"><span class="dot"></span> نظامك الشخصي جاهز</div><p>رتّب يومك، تابع تقدمك، وخلّي كل إنجاز محسوب.</p></div>
+</aside>
+<main>
+<header class="topbar"><div><div class="eyebrow">✦ أهلاً بيك في مساحة إنجازك</div><h1 id="heading">خلّي يومك محسوب.</h1></div><div class="top-actions"><div class="date-pill" id="datePill"></div><button class="btn" id="addTop">＋ مهمة جديدة</button></div></header>
+<section class="view active" id="view-dashboard">
+ <div class="hero"><div><h2>أهلاً يا باشمهندس 👋</h2><p>ده مركزك الشخصي للدراسة والإنجاز. نظّم واجباتك، خطط أسبوعك، وراقب تقدمك بتصميم معمول مخصوص ليك.</p></div><div class="hero-logo">ENG / <span>M</span></div></div>
+ <div class="stats">
+  <div class="stat"><div class="stat-head"><span>إجمالي المهام</span><span class="stat-ico">▤</span></div><strong id="total">0</strong><small>كل المهام المسجلة</small></div>
+  <div class="stat"><div class="stat-head"><span>تم إنجازها</span><span class="stat-ico">✓</span></div><strong id="done">0</strong><small>إنجازاتك بتزيد</small></div>
+  <div class="stat"><div class="stat-head"><span>قيد التنفيذ</span><span class="stat-ico">⚡</span></div><strong id="pending">0</strong><small>ابدأ بالأهم</small></div>
+  <div class="stat"><div class="stat-head"><span>متأخرة</span><span class="stat-ico">◷</span></div><strong id="late">0</strong><small>راجع مواعيد التسليم</small></div>
+ </div>
+ <div class="content-grid">
+  <div class="panel"><div class="panel-head"><h3>✦ المهام القادمة</h3><button class="text-link" data-goto="tasks">كل المهام ←</button></div><div class="task-list" id="upcoming"></div></div>
+  <div class="panel"><div class="panel-head"><h3>مستوى الإنجاز</h3><span class="badge">LIVE</span></div><div class="progress-label"><span style="color:var(--muted)">التقدم الكلي</span><b id="percent">0%</b></div><div class="track"><div class="bar" id="progress"></div></div><div class="panel-head" style="margin-top:25px"><h3>🎯 تذكير اليوم</h3></div><p class="quote">ابدأ بمهمة واحدة صغيرة. الاستمرارية أهم من إنك تعمل كل حاجة مرة واحدة.</p></div>
+ </div>
+ <div class="quick-tools" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;margin-top:15px">
+  <div class="panel"><div class="panel-head"><h3>⏱️ مؤقت التركيز</h3><span class="badge">FOCUS</span></div><div id="focusClock" style="font-size:30px;font-weight:900;letter-spacing:2px;text-align:center;margin:8px 0 14px;font-variant-numeric:tabular-nums">25:00</div><div style="display:flex;gap:7px;justify-content:center;flex-wrap:wrap"><button class="btn" id="focusStart">ابدأ</button><button class="btn btn-secondary" id="focusReset">إعادة</button></div></div>
+  <div class="panel"><div class="panel-head"><h3>🎯 هدف اليوم</h3><span class="badge">DAILY</span></div><p class="quote" style="margin-bottom:10px">اختار هدف بسيط تركز عليه النهارده.</p><input class="field" id="dailyGoal" placeholder="مثال: أخلص واجب البرمجة" style="width:100%"><div id="goalSaved" style="font-size:10px;color:var(--cyan);margin-top:8px;min-height:15px"></div></div>
+  <div class="panel"><div class="panel-head"><h3>📦 بياناتك</h3><span class="badge">LOCAL</span></div><p class="quote" style="margin-bottom:12px">صدّر نسخة احتياطية من مهامك وجدولك وملاحظاتك.</p><button class="btn btn-secondary" id="exportData" style="width:100%">تصدير نسخة احتياطية ↗</button><label class="btn btn-secondary" style="display:block;text-align:center;margin-top:8px;cursor:pointer">استيراد نسخة احتياطية<input type="file" id="importData" accept="application/json,.json" style="display:none"></label></div>
+ </div>
+</section>
+<section class="view" id="view-tasks"><div class="section-head"><h2>إدارة المهام</h2><p>واجباتك، مشاريعك، مواعيدك وأولوياتك في مكان واحد.</p></div><div class="toolbar"><input class="field" id="search" placeholder="⌕ ابحث عن مهمة أو مادة"><select class="field" id="filter"><option value="all">كل المهام</option><option value="pending">غير المكتملة</option><option value="done">المكتملة</option><option value="late">المتأخرة</option></select><select class="field" id="subjectFilter"><option value="all">كل المواد</option></select><button class="btn" id="addPage">＋ إضافة مهمة</button></div><div class="task-manager" id="allTasks"></div></section>
+<section class="view" id="view-schedule"><div class="section-head"><h2>الجدول الأسبوعي</h2><p>اكتب محاضراتك وخطة مذاكرتك لكل يوم. الحفظ تلقائي على جهازك.</p></div><div class="schedule-grid" id="scheduleGrid"></div><p class="footer">الجدول شخصي للتنظيم، وغير متصل بجدول المعهد الرسمي.</p></section>
+<section class="view" id="view-notes"><div class="section-head"><h2>الملاحظات السريعة</h2><p>أفكار المحاضرات وكل التفاصيل اللي محتاج ترجع لها.</p></div><div class="toolbar"><input class="field" id="noteTitle" placeholder="عنوان الملاحظة"><button class="btn" id="newNote">＋ ملاحظة جديدة</button></div><div class="panel" id="noteEditor" style="display:none;margin-bottom:14px"><div class="group"><label for="noteBody">محتوى الملاحظة</label><textarea class="field" id="noteBody" placeholder="اكتب هنا..."></textarea></div><div class="form-actions"><button class="btn" id="saveNote">حفظ الملاحظة</button><button class="btn btn-secondary" id="cancelNote">إلغاء</button></div></div><div class="note-grid" id="notesGrid"></div></section>
+<div class="footer">DESIGNED FOR <b>ENG / MOHAMED</b> · PERSONAL STUDENT OS</div>
+</main></div>
+<div class="modal-bg" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="modal"><div class="modal-head"><h3 id="modalTitle">مهمة جديدة</h3><button class="close" id="closeModal" aria-label="إغلاق">×</button></div><form id="taskForm"><input type="hidden" id="editId"><div class="form-grid">
+<div class="group full"><label for="title">اسم المهمة *</label><input class="field" id="title" required maxlength="120" placeholder="مثال: حل واجب البرمجة"></div>
+<div class="group"><label for="subject">المادة / التصنيف</label><input class="field" id="subject" maxlength="60" placeholder="برمجة"></div>
+<div class="group"><label for="due">موعد التسليم</label><input class="field" id="due" type="date"></div>
+<div class="group"><label for="priority">الأولوية</label><select class="field" id="priority"><option value="medium">متوسطة</option><option value="high">عالية</option><option value="low">منخفضة</option></select></div>
+<div class="group"><label for="type">النوع</label><select class="field" id="type"><option>واجب</option><option>مذاكرة</option><option>مشروع</option><option>محاضرة</option><option>امتحان</option><option>أخرى</option></select></div>
+<div class="group full"><label for="details">تفاصيل إضافية</label><textarea class="field" id="details" placeholder="تفاصيل أو خطوات المهمة..."></textarea></div></div><div class="form-actions"><button class="btn" type="submit">حفظ المهمة ✓</button><button class="btn btn-secondary" type="button" id="cancelModal">إلغاء</button></div></form></div></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>
+(()=>{'use strict';
+const $=id=>document.getElementById(id),TASKKEY='engMohamed.tasks.v2',NOTEKEY='engMohamed.notes.v2',SCHEDKEY='engMohamed.schedule.v2';
+const read=(k,f)=>{try{return JSON.parse(localStorage.getItem(k))??f}catch{return f}};
+let tasks=read(TASKKEY,[]),notes=read(NOTEKEY,[]),schedule=read(SCHEDKEY,{}),editingNote=null,toastTimer;
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const today=()=>{let d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
+const dateText=s=>{if(!s)return'بدون موعد';let [y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d).toLocaleDateString('ar-EG',{day:'numeric',month:'short'})};
+const late=t=>!t.done&&t.due&&t.due<today();
+const toast=msg=>{$('toast').textContent=msg;$('toast').classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').classList.remove('show'),2300)};
+const saveTasks=()=>{try{localStorage.setItem(TASKKEY,JSON.stringify(tasks));renderAll()}catch{toast('المساحة غير كافية لحفظ البيانات')}};
+const priority=p=>p==='high'?'عالية':p==='low'?'منخفضة':'متوسطة';
+function taskHTML(t){return `<div class="task-row ${t.done?'done':''}"><input class="check" type="checkbox" data-check="${t.id}" ${t.done?'checked':''} aria-label="إنجاز المهمة"><div class="task-main"><div class="task-title">${esc(t.title)}</div><div class="task-meta"><span>${esc(t.subject||'عام')}</span><span>•</span><span>${esc(t.type||'مهمة')}</span><span>•</span><span>◷ ${dateText(t.due)}</span><span class="badge ${t.priority}">${priority(t.priority)}</span>${late(t)?'<span class="badge high">متأخرة</span>':''}${t.details?'<span title="'+esc(t.details)+'">ⓘ تفاصيل</span>':''}</div></div><div class="task-actions"><button class="icon-btn" data-edit="${t.id}" title="تعديل">✎</button><button class="icon-btn" data-delete="${t.id}" title="حذف">×</button></div></div>`}
+const empty=msg=>`<div class="empty"><span>✦</span>${msg}</div>`;
+function renderDashboard(){let d=tasks.filter(t=>t.done).length,p=tasks.length-d,l=tasks.filter(late).length,pc=tasks.length?Math.round(d/tasks.length*100):0;$('total').textContent=tasks.length;$('done').textContent=d;$('pending').textContent=p;$('late').textContent=l;$('percent').textContent=pc+'%';$('progress').style.width=pc+'%';let list=tasks.filter(t=>!t.done).sort((a,b)=>(a.due||'9999').localeCompare(b.due||'9999')).slice(0,5);$('upcoming').innerHTML=list.length?list.map(taskHTML).join(''):empty('مفيش مهام لسه.<br>ضيف أول مهمة وابدأ إنجازك!')}
+function renderTasks(){let q=$('search').value.trim().toLowerCase(),f=$('filter').value,s=$('subjectFilter').value;let list=tasks.filter(t=>(!q||[t.title,t.subject,t.details,t.type].join(' ').toLowerCase().includes(q))&&(f==='all'||f==='pending'&&!t.done||f==='done'&&t.done||f==='late'&&late(t))&&(s==='all'||(t.subject||'عام')===s)).sort((a,b)=>(a.done-b.done)||(a.due||'9999').localeCompare(b.due||'9999'));$('allTasks').innerHTML=list.length?list.map(taskHTML).join(''):empty('مفيش مهام مطابقة. جرّب تغيّر البحث أو أضف مهمة.')}
+function renderSubjects(){let e=$('subjectFilter'),old=e.value,subs=[...new Set(tasks.map(t=>t.subject||'عام'))].sort();e.innerHTML='<option value="all">كل المواد</option>'+subs.map(s=>`<option value="${esc(s)}">${esc(s)}</option>`).join('');if(subs.includes(old))e.value=old}
+function renderAll(){renderDashboard();renderTasks();renderSubjects()}
+function openModal(t=null){$('modal').classList.add('open');$('modalTitle').textContent=t?'تعديل المهمة':'مهمة جديدة';$('editId').value=t?.id||'';$('title').value=t?.title||'';$('subject').value=t?.subject||'';$('due').value=t?.due||'';$('priority').value=t?.priority||'medium';$('type').value=t?.type||'واجب';$('details').value=t?.details||'';setTimeout(()=>$('title').focus(),60)}
+function closeModal(){$('modal').classList.remove('open')}
+$('taskForm').addEventListener('submit',e=>{e.preventDefault();let title=$('title').value.trim();if(!title)return;let id=$('editId').value,data={title,subject:$('subject').value.trim()||'عام',due:$('due').value,priority:$('priority').value,type:$('type').value,details:$('details').value.trim(),done:false};if(id){let old=tasks.find(t=>String(t.id)===id);if(old)Object.assign(old,data,{done:old.done});toast('اتعدلت المهمة ✓')}else{tasks.unshift({...data,id:Date.now(),created:today()});toast('المهمة اتضافت بنجاح ✦')}closeModal();saveTasks()});
+$('addTop').onclick=$('addPage').onclick=()=>openModal();$('closeModal').onclick=$('cancelModal').onclick=closeModal;$('modal').addEventListener('click',e=>{if(e.target===$('modal'))closeModal()});
+document.addEventListener('click',e=>{let b=e.target.closest('[data-edit],[data-delete],[data-goto]');if(!b)return;if(b.dataset.edit){let t=tasks.find(x=>String(x.id)===b.dataset.edit);if(t)openModal(t)}if(b.dataset.delete){let t=tasks.find(x=>String(x.id)===b.dataset.delete);if(t&&confirm(`تحذف المهمة "${t.title}"؟`)){tasks=tasks.filter(x=>x.id!==t.id);saveTasks();toast('تم حذف المهمة')}}if(b.dataset.goto)go(b.dataset.goto)});
+document.addEventListener('change',e=>{if(e.target.matches('[data-check]')){let t=tasks.find(x=>String(x.id)===e.target.dataset.check);if(t){t.done=e.target.checked;saveTasks();toast(t.done?'عاش يا هندسة! 🎉':'رجّعنا المهمة لقائمة التنفيذ')}}});
+$('search').addEventListener('input',renderTasks);$('filter').addEventListener('change',renderTasks);$('subjectFilter').addEventListener('change',renderTasks);
+const heads={dashboard:'خلّي يومك محسوب.',tasks:'إدارة المهام.',schedule:'خطّط أسبوعك.',notes:'كل أفكارك في مكان واحد.'};
+function go(v){document.querySelectorAll('.view').forEach(x=>x.classList.toggle('active',x.id==='view-'+v));document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.view===v));$('heading').textContent=heads[v]||heads.dashboard;window.scrollTo({top:0,behavior:'smooth'})}
+document.querySelectorAll('.nav button').forEach(b=>b.addEventListener('click',()=>go(b.dataset.view)));
+const days=['السبت','الأحد','الإثنين','الثلاثاء','الأربعاء','الخميس','الجمعة'];
+function renderSchedule(){$('scheduleGrid').innerHTML=days.map(d=>`<div class="day"><h4>${d}</h4><textarea data-day="${d}" aria-label="جدول يوم ${d}" placeholder="10:00 — برمجة&#10;12:00 — رياضيات">${esc(schedule[d]||'')}</textarea></div>`).join('');$('scheduleGrid').querySelectorAll('textarea').forEach(e=>e.addEventListener('input',()=>{schedule[e.dataset.day]=e.value;try{localStorage.setItem(SCHEDKEY,JSON.stringify(schedule))}catch{toast('تعذر حفظ الجدول')}}))}
+function renderNotes(){$('notesGrid').innerHTML=notes.length?notes.slice().sort((a,b)=>b.updated-a.updated).map(n=>`<article class="note-card"><h4>${esc(n.title||'ملاحظة بدون عنوان')}</h4><p>${esc(n.body)}</p><div class="note-foot"><span>${new Date(n.updated).toLocaleDateString('ar-EG')}</span><span><button class="icon-btn" data-note-edit="${n.id}">تعديل</button><button class="icon-btn" data-note-delete="${n.id}">حذف</button></span></div></article>`).join(''):empty('لسه مفيش ملاحظات.<br>اكتب أول ملاحظة ليك!')}
+const noteEditor=show=>{$('noteEditor').style.display=show?'block':'none'};
+$('newNote').onclick=()=>{editingNote=null;$('noteTitle').value='';$('noteBody').value='';noteEditor(true);$('noteBody').focus()};
+$('saveNote').onclick=()=>{let title=$('noteTitle').value.trim(),body=$('noteBody').value.trim();if(!title&&!body){toast('اكتب عنوان أو محتوى الأول');return}if(editingNote){let n=notes.find(n=>n.id===editingNote);if(n){n.title=title;n.body=body;n.updated=Date.now()}}else notes.push({id:Date.now(),title,body,updated:Date.now()});try{localStorage.setItem(NOTEKEY,JSON.stringify(notes))}catch{}renderNotes();noteEditor(false);editingNote=null;toast('الملاحظة اتحفظت ✓')};
+$('cancelNote').onclick=()=>{noteEditor(false);editingNote=null};
+$('notesGrid').addEventListener('click',e=>{let ed=e.target.closest('[data-note-edit]'),del=e.target.closest('[data-note-delete]');if(ed){let n=notes.find(n=>n.id===Number(ed.dataset.noteEdit));if(n){editingNote=n.id;$('noteTitle').value=n.title;$('noteBody').value=n.body;noteEditor(true);$('noteBody').focus()}}if(del){let id=Number(del.dataset.noteDelete);if(confirm('تحذف الملاحظة دي؟')){notes=notes.filter(n=>n.id!==id);localStorage.setItem(NOTEKEY,JSON.stringify(notes));renderNotes();toast('الملاحظة اتحذفت')}}});
+
+// Focus timer, daily goal, and portable backup tools.
+let focusSeconds=25*60,focusInterval=null;
+function paintClock(){let m=String(Math.floor(focusSeconds/60)).padStart(2,'0'),s=String(focusSeconds%60).padStart(2,'0');$('focusClock').textContent=m+':'+s}
+$('focusStart').addEventListener('click',()=>{if(focusInterval){clearInterval(focusInterval);focusInterval=null;$('focusStart').textContent='كمّل';return}if(focusSeconds<=0)focusSeconds=25*60;$('focusStart').textContent='إيقاف مؤقت';focusInterval=setInterval(()=>{focusSeconds--;paintClock();if(focusSeconds<=0){clearInterval(focusInterval);focusInterval=null;$('focusStart').textContent='ابدأ';toast('خلصت جلسة التركيز! خد استراحة قصيرة 🎉')}},1000)});
+$('focusReset').addEventListener('click',()=>{if(focusInterval)clearInterval(focusInterval);focusInterval=null;focusSeconds=25*60;paintClock();$('focusStart').textContent='ابدأ'});
+const goalKey='engMohamed.dailyGoal.v1';$('dailyGoal').value=localStorage.getItem(goalKey)||'';$('dailyGoal').addEventListener('input',()=>{localStorage.setItem(goalKey,$('dailyGoal').value);$('goalSaved').textContent=$('dailyGoal').value?'تم حفظ هدفك على الجهاز ✓':''});
+$('exportData').addEventListener('click',()=>{const payload={app:'ENG / MOHAMED STUDENT OS',version:2,exportedAt:new Date().toISOString(),tasks,notes,schedule,dailyGoal:localStorage.getItem(goalKey)||''};const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='ENG_MOHAMED_backup.json';a.click();URL.revokeObjectURL(url);toast('جهزنا النسخة الاحتياطية ✓')});
+$('importData').addEventListener('change',async e=>{const file=e.target.files?.[0];if(!file)return;try{const data=JSON.parse(await file.text());if(!data||!Array.isArray(data.tasks)||!Array.isArray(data.notes)||typeof data.schedule!=='object')throw new Error('invalid');if(!confirm('الاستيراد هيستبدل المهام والملاحظات والجدول الحالي. نكمل؟'))return;tasks=data.tasks;notes=data.notes;schedule=data.schedule;localStorage.setItem(TASKKEY,JSON.stringify(tasks));localStorage.setItem(NOTEKEY,JSON.stringify(notes));localStorage.setItem(SCHEDKEY,JSON.stringify(schedule));if(data.dailyGoal)localStorage.setItem(goalKey,data.dailyGoal);renderAll();renderNotes();renderSchedule();$('dailyGoal').value=localStorage.getItem(goalKey)||'';toast('تم استيراد بياناتك بنجاح ✓')}catch{toast('الملف مش نسخة احتياطية صالحة من المنصة')}finally{e.target.value=''}});
+paintClock();
+
+$('datePill').textContent=new Date().toLocaleDateString('ar-EG',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+
+renderSchedule();renderNotes();renderAll();
+const introSlides=[
+ {k:'WELCOME TO YOUR PERSONAL OS',title:'دي مش مجرد منصة…<br><span>دي بصمتك.</span>',desc:'أهلاً بيك في ENG / MOHAMED — مساحة شخصية للدراسة والتخطيط والإنجاز. واجهة بهويتك، وأدوات تجمع يومك كله في مكان واحد.',features:['✦ هويتك الخاصة','⚡ تجربة تفاعلية','◈ كل حاجة في مكانها'],cta:'اكتشف المنصة'},
+ {k:'PLAN SMART. MOVE FORWARD.',title:'رتّب يومك،<br><span>وسيطر على وقتك.</span>',desc:'سجّل واجباتك ومشاريعك، حدد الأولويات ومواعيد التسليم، وخلي جدول المحاضرات والملاحظات جاهزين وقت ما تحتاجهم.',features:['📚 مهام ومشاريع','🗓️ جدول أسبوعي','📝 ملاحظات سريعة'],cta:'كمّل الجولة'},
+ {k:'YOUR PROGRESS. YOUR PACE.',title:'كل إنجاز صغير<br><span>بيعمل فرق كبير.</span>',desc:'تابع اللي خلصته واللي لسه عليك، راقب تقدمك، وابدأ كل يوم بخطة أوضح. بياناتك الأساسية محفوظة على جهازك وفي متناول إيدك.',features:['📈 مؤشر الإنجاز','💾 حفظ محلي','🎯 أولويات واضحة'],cta:'المحطة الجاية'},
+ {k:'MADE TO FEEL LIKE YOURS',title:'ستايلك. نظامك.<br><span>مستواك الجاي.</span>',desc:'تأثيرات ناعمة، تفاصيل متحركة، وهوية ENG / MOHAMED في كل ركن. دي نقطة البداية؛ تقدر تبني روتينك الدراسي بالطريقة اللي تناسبك.',features:['✧ هوية شخصية','🌌 واجهة حية','🚀 جاهز للانطلاق'],cta:'ادخل منصتي'}
+];
+let introIndex=0;
+function renderIntro(index){
+ const s=introSlides[index],screen=$('introScreen');
+ screen.dataset.step=String(index);
+ $('introKicker').textContent=s.k;$('introTitle').innerHTML=s.title;$('introDescription').textContent=s.desc;
+ $('introFeatures').innerHTML=s.features.map(x=>`<span>${esc(x)}</span>`).join('');
+ $('introNextText').textContent=s.cta;$('introStepText').textContent=`0${index+1} / 04`;
+ document.querySelectorAll('.intro-dot').forEach((d,i)=>d.classList.toggle('active',i===index));
+ const copy=$('introCopy'),visual=$('introVisual');copy.style.animation='none';visual.style.animation='none';
+ void copy.offsetWidth;copy.style.animation='slideIn .5s both';visual.style.animation='visualEnter .65s both';
+}
+function enterPlatform(){
+ $('introScreen').classList.add('finished');
+ setTimeout(()=>{$('splash').classList.remove('hide');setTimeout(()=>$('splash').classList.add('hide'),1600)},450);
+}
+$('introNext').addEventListener('click',()=>{if(introIndex<introSlides.length-1){introIndex++;renderIntro(introIndex)}else enterPlatform()});
+$('introSkip').addEventListener('click',enterPlatform);
+renderIntro(0);
+
+})();
+</script>
+</body>
+</html>
