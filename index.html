@@ -16,22 +16,6 @@ main{width:100%;max-width:1600px;margin:auto;padding:28px clamp(16px,3vw,44px) 4
 @media(max-width:1080px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.schedule-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.note-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:760px){.layout{grid-template-columns:1fr}.sidebar{position:relative;height:auto;padding:13px;gap:13px;border-left:0;border-bottom:1px solid #ffffff10}.nav-label,.side-bottom{display:none}.nav{display:flex;overflow-x:auto;gap:5px;padding-bottom:2px}.nav button{white-space:nowrap;padding:9px 10px;font-size:11px}.nav button.active{box-shadow:inset 0 -3px var(--purple)}main{padding:20px 13px 30px}.topbar{align-items:flex-start;flex-wrap:wrap}.top-actions{width:100%;justify-content:space-between}.hero{padding:19px}.hero-logo{width:58px;height:58px;border-radius:18px;font-size:14px}.hero h2{font-size:18px}.content-grid{grid-template-columns:1fr}.schedule-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.note-grid{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr}.group.full{grid-column:auto}}
 @media(max-width:390px){.stats{gap:8px}.stat{padding:12px}.stat strong{font-size:24px}.date-pill{display:none}}
-/* Targeted mobile overflow fix: preserve the original desktop sidebar/layout */
-html,body{max-width:100%;overflow-x:hidden}
-.layout{grid-template-columns:255px minmax(0,1fr)}
-main{min-width:0}
-@media(max-width:760px){
-  .layout{grid-template-columns:minmax(0,1fr)}
-  .sidebar,main,.nav,.topbar,.top-actions,.hero,.content-grid,.stats{min-width:0;max-width:100%}
-  main{width:100%;padding:20px 13px 30px}
-  .nav{display:flex;overflow-x:auto}
-  .hero{width:100%;gap:12px}
-  .hero>div:first-child{min-width:0}
-  .top-actions{flex-wrap:wrap}
-  .content-grid{grid-template-columns:minmax(0,1fr)}
-  .schedule-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .note-grid{grid-template-columns:minmax(0,1fr)}
-}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}
 
 /* AUTH GATE — login first, then the original Student OS */
@@ -59,6 +43,50 @@ body:not(.authenticated) .layout,body:not(.authenticated) .modal-bg,body:not(.au
 .intro-features span{padding:10px 13px;border:1px solid #ffffff18;background:#ffffff08;border-radius:12px;color:#e0e9fa;font-size:12px}
 
 
+
+/* FINAL MOBILE WIDTH / CENTERING FIX */
+html{width:100%;max-width:100%;overflow-x:clip;}
+body{width:100%;max-width:100%;margin:0;overflow-x:clip;}
+.layout{width:100%;max-width:100%;min-width:0;}
+.layout>* , main, .sidebar, .view, .hero, .content-grid, .stats, .panel, .stat,
+.auth-gate, .auth-shell, .auth-brand, .auth-card-main, .intro-screen, .intro-card {
+  min-width:0;max-width:100%;
+}
+main{width:100%;min-width:0;margin-inline:auto;}
+img,video,iframe,canvas,svg{max-width:100%;}
+input,select,textarea,button{max-width:100%;}
+@media (max-width:760px){
+  html,body{width:100%;max-width:100%;overflow-x:clip;}
+  .layout{display:grid;grid-template-columns:minmax(0,1fr);width:100%;}
+  .sidebar{width:100%;min-width:0;margin:0;}
+  .brand{min-width:0;max-width:100%;}
+  .nav{width:100%;max-width:100%;min-width:0;}
+  main{width:100%;max-width:100%;min-width:0;margin:0;padding:16px 12px 28px;}
+  .topbar,.topbar>div,.top-actions{min-width:0;max-width:100%;}
+  .top-actions{display:flex;flex-wrap:wrap;justify-content:flex-start;gap:8px;}
+  .hero{width:100%;max-width:100%;min-width:0;gap:10px;padding:16px;}
+  .hero>div:first-child{min-width:0;flex:1 1 0;}
+  .hero-logo{flex:0 0 52px;width:52px;height:52px;font-size:11px;}
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr));width:100%;}
+  .content-grid{grid-template-columns:minmax(0,1fr);width:100%;}
+  .schedule-grid{grid-template-columns:repeat(2,minmax(0,1fr));}
+  .toolbar .field{min-width:0;flex:1 1 140px;}
+  .auth-gate{position:fixed;inset:0;width:100%;max-width:100%;padding:12px;overflow-y:auto;overflow-x:clip;}
+  .auth-shell{width:100%;max-width:520px;margin-inline:auto;grid-template-columns:minmax(0,1fr);gap:12px;}
+  .auth-brand,.auth-card-main{width:100%;padding:18px;border-radius:20px;}
+  .intro-screen{position:fixed;inset:0;width:100%;max-width:100%;padding:12px;overflow-y:auto;overflow-x:clip;}
+  .intro-card{width:100%;max-width:600px;margin:auto;padding:22px 16px;}
+  .intro-card h1{overflow-wrap:anywhere;}
+  .modal-bg{padding:10px;}
+  .modal{width:100%;max-width:570px;padding:16px;}
+}
+@media(max-width:360px){
+  main{padding-inline:9px;}
+  .stats{gap:7px;}
+  .stat{padding:10px;}
+  .hero-logo{display:none;}
+  .auth-brand,.auth-card-main{padding:15px;}
+}
 
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
