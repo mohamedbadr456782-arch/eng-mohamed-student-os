@@ -329,7 +329,7 @@ const clearGateMsg=()=>{$('gateMessage').textContent='';$('gateMessage').classNa
 function setAuthMode(mode){authMode=mode;const signup=mode==='signup';$('gateLoginTab').classList.toggle('active',!signup);$('gateSignupTab').classList.toggle('active',signup);$('gateTitle').textContent=signup?'انضم للمنصة مجانًا 🎓':'أهلاً بيك 👋';$('gateSub').textContent=signup?'اكتب اسمك وإيميلك وأنشئ كلمة مرور لحسابك.':'سجّل دخولك عشان تفتح المنصة.';$('gateNameWrap').style.display=signup?'grid':'none';$('gateName').required=signup;$('gateSubmit').textContent=signup?'إنشاء حساب':'تسجيل الدخول ←';$('gatePassword').autocomplete=signup?'new-password':'current-password';clearGateMsg();}
 function showPlatform(user,withTransition=true){currentUser=user;loadAccountData(user);document.body.classList.add('authenticated');$('authGate').style.display='none';$('feedbackBanner').hidden=false;if(withTransition){$('welcomeTransition').classList.add('show');setTimeout(()=>{$('welcomeTransition').classList.remove('show');$('splash').classList.remove('hide');setTimeout(()=>$('splash').classList.add('hide'),1500)},900)}else{$('splash').classList.add('hide')}const brand=document.querySelector('.topbar .eyebrow');if(brand)brand.textContent='✦ مساحة الطالب · '+(user.user_metadata?.full_name||user.email||'حسابك');}
 function showGate(){document.body.classList.remove('authenticated');$('feedbackBanner').hidden=true;$('authGate').style.display='flex';$('welcomeTransition').classList.remove('show');$('splash').classList.add('hide');setAuthMode('login');}
-try{if(!window.supabase||!window.supabase.createClient){throw new Error('تعذّر تحميل مكتبة تسجيل الدخول. تأكد من اتصال الإنترنت ثم حدّث الصفحة.')}if(!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY){throw new Error('إعدادات Supabase ناقصة في ملف index.html.')}supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);}catch(err){gateMsg(err.message,'err');}
+try{if(!window.supabase||!window.supabase.createClient){throw new Error('تعذّر تحميل مكتبة تسجيل الدخول. تأكد من اتصال الإنترنت ثم حدّث الصفحة.')}if(!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY){throw new Error('إعدادات Supabase ناقصة في ملف index.html.')}supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);window.studentOSSupabaseClient=supabaseClient;}catch(err){gateMsg(err.message,'err');}
 $('gateLoginTab').addEventListener('click',()=>setAuthMode('login'));$('gateSignupTab').addEventListener('click',()=>setAuthMode('signup'));
 $('gateForm').addEventListener('submit',async e=>{e.preventDefault();clearGateMsg();if(!supabaseClient){gateMsg('إعداد تسجيل الدخول مش مكتمل. راجع مفتاح Supabase في ملف الموقع.','err');return;}const btn=$('gateSubmit'),email=$('gateEmail').value.trim(),password=$('gatePassword').value,studentName=$('gateName').value.trim();if(authMode==='signup'&&!studentName){gateMsg('اكتب اسمك الأول عشان نكمل إنشاء الحساب.','err');return;}btn.disabled=true;btn.textContent='لحظة بنراجع بياناتك...';try{if(authMode==='signup'){const {data,error}=await supabaseClient.auth.signUp({email,password,options:{data:{full_name:studentName},emailRedirectTo:'https://mohamedbadr456782-arch.github.io/eng-mohamed-student-os/'}});if(error)throw error;if(data.session&&data.user){gateMsg('الحساب اتعمل بنجاح. بنفتح منصتك دلوقتي ✨','ok');showPlatform(data.user,false);$('introScreen').classList.add('show');}else{setAuthMode('login');$('gateEmail').value=email;gateMsg('الحساب اتعمل. افتح رسالة تأكيد البريد الإلكتروني، وبعد التأكيد ارجع وسجّل الدخول.','ok');}}else{const {data,error}=await supabaseClient.auth.signInWithPassword({email,password});if(error)throw error;if(!data.session||!data.user)throw new Error('تم التحقق لكن مفيش جلسة دخول. جرّب تاني.');gateMsg('تم تسجيل الدخول بنجاح. بنفتح المنصة...','ok');showPlatform(data.user,false);$('introScreen').classList.add('show');}}catch(err){gateMsg(err.message||'حصل خطأ. راجع البريد وكلمة المرور.','err');}finally{btn.disabled=false;btn.textContent=authMode==='signup'?'إنشاء حساب':'تسجيل الدخول ←';}});
 $('gateForgot').addEventListener('click',async()=>{clearGateMsg();if(!supabaseClient){gateMsg('إعداد تسجيل الدخول مش مكتمل.','err');return;}const email=$('gateEmail').value.trim();if(!email){gateMsg('اكتب بريدك الإلكتروني الأول، وبعدها اضغط نسيت كلمة المرور.','err');return;}try{const {error}=await supabaseClient.auth.resetPasswordForEmail(email,{redirectTo:'https://mohamedbadr456782-arch.github.io/eng-mohamed-student-os/'});if(error)throw error;gateMsg('لو البريد مسجل، هتوصلك رسالة استعادة. راجع الوارد والـ Spam.','ok');}catch(err){gateMsg(err.message||'تعذّر إرسال رسالة الاستعادة.','err');}});
@@ -345,7 +345,7 @@ const banner=document.getElementById('feedbackBanner');const closeBanner=documen
   <span class="mai-launch-icon">✦</span><span class="mai-launch-copy"><b>MOHAMED AI <span class="mai-online"></span></b><small>اسأل مساعدك الذكي ✨ · اضغط هنا</small></span>
 </button>
 <section class="mai-window" id="maiWindow" role="dialog" aria-modal="false" aria-label="محادثة MOHAMED AI">
-  <header class="mai-head"><div class="mai-avatar">✦</div><div class="mai-head-text"><b>MOHAMED AI</b><small>مساعد المنصة والدراسة والبرمجة</small></div><div class="mai-head-actions"><button id="maiMinimize" type="button" aria-label="تصغير">−</button><button id="maiClose" type="button" aria-label="إغلاق">×</button></div></header>
+  <header class="mai-head"><div class="mai-avatar">✦</div><div class="mai-head-text"><b>MOHAMED AI</b><small>مساعد ذكي للأسئلة العامة والدراسة والبرمجة</small></div><div class="mai-head-actions"><button id="maiMinimize" type="button" aria-label="تصغير">−</button><button id="maiClose" type="button" aria-label="إغلاق">×</button></div></header>
   <div class="mai-chat" id="maiChat" aria-live="polite"><div class="mai-welcome" id="maiWelcome"><div class="mai-kicker">YOUR SMART STUDY COMPANION</div><h3>أهلاً بيك! ✨<br>أنا MOHAMED AI</h3><p>اسألني عن المنصة، الدراسة، البرمجة أو أي فكرة محتاج تفهمها. اختار سؤال سريع أو اكتب سؤالك تحت.</p><div class="mai-chips"><button class="mai-chip" type="button">🧭 إزاي أستخدم المنصة؟</button><button class="mai-chip" type="button">💻 ساعدني في البرمجة</button><button class="mai-chip" type="button">📚 اشرحلي درس</button><button class="mai-chip" type="button">🗓️ نظّملي مذاكرتي</button></div></div></div>
   <div class="mai-typing" id="maiTyping">MOHAMED AI بيفكر<span> •••</span></div>
   <form class="mai-composer" id="maiForm"><div class="mai-input-row"><textarea id="maiInput" rows="1" maxlength="3000" placeholder="اكتب سؤالك هنا..." aria-label="اكتب سؤالك"></textarea><button class="mai-send" id="maiSend" type="submit" aria-label="إرسال السؤال">➤</button></div><div class="mai-footnote">راجع المعلومات المهمة قبل الاعتماد عليها · لا تشارك كلمات المرور</div></form>
@@ -360,25 +360,28 @@ const banner=document.getElementById('feedbackBanner');const closeBanner=documen
  const close=()=>{win.classList.remove('mai-open');launch.style.display='flex'};
  launch.addEventListener('click',open);$('maiClose').addEventListener('click',close);$('maiMinimize').addEventListener('click',close);
  const add=(text,who)=>{const d=document.createElement('div');d.className='mai-message '+who;d.textContent=text;chat.appendChild(d);chat.scrollTop=chat.scrollHeight;return d};
- const canned=(q)=>{const t=q.toLowerCase();
-  if(/المنص|مهم|جدول|ملاحظ|student os|استخدم/.test(t))return 'أقدر أساعدك في استخدام المنصة! من القائمة تقدر تفتح الرئيسية، المهام لإضافة ومتابعة مهامك، الجدول الأسبوعي لتنظيم وقتك، والملاحظات لحفظ أفكارك. لو بتواجه مشكلة في زر معين، اكتبلي اسم الزر وإيه اللي بيحصل.';
-  if(/مذاكر|نظم|نظّم|جدول/.test(t))return 'خلّينا نبدأ ببساطة ✨ اكتبلي المواد اللي عندك، أقرب موعد امتحان، والوقت المتاح يوميًا، وأنا أساعدك ترتب خطة واقعية فيها فترات راحة ومراجعة.';
-  if(/برمج|كود|javascript|python|html|css/.test(t))return 'تمام يا بطل 💻 ابعتلي الكود أو رسالة الخطأ، وقولي المفروض يحصل إيه واللي بيحصل فعلًا. هساعدك نفهم المشكلة خطوة بخطوة.';
-  if(/درس|اشرح|فيزيا|كيميا|رياض|فيزياء/.test(t))return 'أكيد 📚 ابعت اسم الدرس أو نص السؤال أو صورة واضحة، وأنا أساعدك تفهم الفكرة والخطوات، مش مجرد الإجابة النهائية.';
-  return null;
- };
+ const history=[];
  const reply=async q=>{
   typing.classList.add('show');send.disabled=true;
+  const priorHistory=history.slice(-10);
+  history.push({role:'user',text:q});
   try{
-   /* Real AI connection is intentionally routed through a secure Supabase Edge Function. */
-   if(window.MOHAMED_AI_BACKEND_URL){
-    const res=await fetch(window.MOHAMED_AI_BACKEND_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:q,context:'ENG / MOHAMED Student OS assistant'})});
-    if(!res.ok)throw new Error('AI backend request failed');const data=await res.json();const answer=data.reply||data.answer||data.message;if(!answer)throw new Error('Empty AI response');add(String(answer),'bot');return;
+   const client=window.studentOSSupabaseClient;
+   if(!client)throw new Error('خدمة المنصة مش جاهزة. حدّث الصفحة وجرب تاني.');
+   const {data,error}=await client.functions.invoke('student-ai',{body:{message:q,history:priorHistory}});
+   if(error){
+    let details='';
+    try{if(error.context&&typeof error.context.json==='function'){const body=await error.context.json();details=body?.error||''}}catch{}
+    throw new Error(details||error.message||'تعذر الاتصال بالمساعد.');
    }
-   await new Promise(r=>setTimeout(r,500));const answer=canned(q);
-   if(answer)add(answer,'bot');else add('سؤالك وصلني ❤️ واجهة MOHAMED AI جاهزة، لكن الاتصال بنموذج الذكاء الاصطناعي الحقيقي لسه محتاج إعداد Backend آمن ومفتاح API على الخادم. حاليًا أقدر أساعدك في أسئلة المنصة والبرمجة والمذاكرة الشائعة، وبعد توصيل الخدمة هتقدر تسألني أسئلة عامة كمان.','bot');
-  }catch(e){add('حصلت مشكلة في الاتصال بالمساعد دلوقتي. جرّب تاني بعد شوية.','bot')}
-  finally{typing.classList.remove('show');send.disabled=false;input.focus()}
+   const answer=typeof data?.reply==='string'?data.reply.trim():'';
+   if(!answer)throw new Error(data?.error||'المساعد مرجعش إجابة. جرّب مرة تانية.');
+   history.push({role:'assistant',text:answer});
+   add(answer,'bot');
+  }catch(e){
+   if(history.length&&history[history.length-1]?.role==='user')history.pop();
+   add('معلش يا هندسة، حصلت مشكلة: '+(e?.message||'تعذر إرسال الرسالة')+'\nجرّب تاني بعد شوية.','bot');
+  }finally{typing.classList.remove('show');send.disabled=false;input.focus()}
  };
  const submit=q=>{q=(q||'').trim();if(!q)return;add(q,'user');input.value='';input.style.height='auto';reply(q)};
  form.addEventListener('submit',e=>{e.preventDefault();submit(input.value)});
