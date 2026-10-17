@@ -315,9 +315,8 @@ $('gateForgot').addEventListener('click',async()=>{clearGateMsg();if(!supabaseCl
 $('accountLogout').addEventListener('click',async()=>{if(!supabaseClient)return;const {error}=await supabaseClient.auth.signOut();if(error){toast('تعذّر تسجيل الخروج: '+error.message);return;}currentUser=null;showGate();});
 $('enterPlatformBtn').addEventListener('click',()=>{$('introScreen').classList.remove('show');$('splash').classList.remove('hide');setTimeout(()=>$('splash').classList.add('hide'),900);});
 if(supabaseClient){supabaseClient.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_OUT'){currentUser=null;showGate();}});supabaseClient.auth.getSession().then(({data,error})=>{if(!error&&data.session&&data.session.user)showPlatform(data.session.user,false);else showGate();}).catch(()=>showGate());}else{showGate();}
+const banner=document.getElementById('feedbackBanner');const closeBanner=document.getElementById('dismissFeedbackAnnouncement');if(banner&&closeBanner){closeBanner.addEventListener('click',()=>{banner.hidden=true;});}
 })();
-<script>
-(()=>{const banner=document.getElementById('feedbackBanner');const close=document.getElementById('dismissFeedbackAnnouncement');if(!banner||!close)return;close.addEventListener('click',()=>{banner.hidden=true;});})();
 </script>
 </body>
 </html>
