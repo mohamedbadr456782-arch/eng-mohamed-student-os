@@ -47,7 +47,7 @@ body:not(.authenticated) .layout,body:not(.authenticated) .modal-bg,body:not(.au
 /* FINAL MOBILE WIDTH / CENTERING FIX */
 html{width:100%;max-width:100%;overflow-x:clip;}
 body{width:100%;max-width:100%;margin:0;overflow-x:clip;}
-.layout{width:100%;max-width:100%;min-width:0;grid-template-columns:minmax(0,1fr);}
+.layout{width:100%;max-width:100%;min-width:0;}
 .layout>* , main, .sidebar, .view, .hero, .content-grid, .stats, .panel, .stat,
 .auth-gate, .auth-shell, .auth-brand, .auth-card-main, .intro-screen, .intro-card {
   min-width:0;max-width:100%;
@@ -89,7 +89,7 @@ input,select,textarea,button{max-width:100%;}
 }
 
 
-/* Announcement strip: isolated layout, gold attention effect, dismissible */
+/* Announcement strip: isolated and responsive; does not alter the page grid */
 .feedback-announcement{position:relative;isolation:isolate;width:100%;min-width:0;display:flex;align-items:center;gap:14px;overflow:hidden;margin:18px 0 20px;padding:14px 54px 14px 18px;border:1px solid #ffc66d99;border-radius:16px;background:linear-gradient(105deg,#3a260d 0%,#342016 48%,#39200f 100%);box-shadow:0 0 0 1px #ffc66d18,0 8px 28px #ffc66d16;animation:feedbackAttention 3.2s ease-in-out infinite;clear:both}
 .feedback-announcement[hidden]{display:none!important}
 .feedback-announcement:before{content:"";position:absolute;z-index:-1;top:-30%;bottom:-30%;left:-45%;width:35%;pointer-events:none;background:linear-gradient(90deg,transparent,#fff4c455,transparent);transform:skewX(-20deg);animation:feedbackSweep 4s ease-in-out infinite}
@@ -149,11 +149,13 @@ input,select,textarea,button{max-width:100%;}
 <header class="topbar"><div><div class="eyebrow">✦ أهلاً بيك في مساحة إنجازك</div><h1 id="heading">خلّي يومك محسوب.</h1></div><div class="top-actions"><div class="date-pill" id="datePill"></div><button class="btn" id="addTop">＋ مهمة جديدة</button><button class="auth-logout" id="accountLogout" type="button">خروج</button></div></header>
 <section class="view active" id="view-dashboard">
  <div class="hero"><div><h2>أهلاً يا باشمهندس 👋</h2><p>ده مركزك الشخصي للدراسة والإنجاز. نظّم واجباتك، خطط أسبوعك، وراقب تقدمك بتصميم معمول مخصوص ليك.</p></div><div class="hero-logo">ENG / <span>M</span></div></div>
+
  <aside class="feedback-announcement" id="feedbackAnnouncement" aria-label="إعلان الشكاوى والاقتراحات">
   <div class="feedback-bell" aria-hidden="true">📣</div>
   <div class="feedback-copy"><strong>📢 صوتك يفرق معانا!</strong><p>عندك شكوى أو اقتراح لتطوير المنصة؟ رأيك هيساعدنا نخلي تجربتك أحسن.</p></div>
   <button class="feedback-close" id="dismissFeedbackAnnouncement" type="button" aria-label="إخفاء الشريط" title="إخفاء الشريط">×</button>
  </aside>
+
  <div class="stats">
   <div class="stat"><div class="stat-head"><span>إجمالي المهام</span><span class="stat-ico">▤</span></div><strong id="total">0</strong><small>كل المهام المسجلة</small></div>
   <div class="stat"><div class="stat-head"><span>تم إنجازها</span><span class="stat-ico">✓</span></div><strong id="done">0</strong><small>إنجازاتك بتزيد</small></div>
@@ -183,11 +185,12 @@ input,select,textarea,button{max-width:100%;}
  const banner=document.getElementById('feedbackAnnouncement');
  const close=document.getElementById('dismissFeedbackAnnouncement');
  if(!banner||!close)return;
- // يظهر الشريط من جديد عند كل فتح/تحميل للمنصة؛ الإغلاق مؤقت لهذه الزيارة فقط.
+ // Show on every page load; dismiss only for the current visit.
  banner.hidden=false;
  close.addEventListener('click',()=>{banner.hidden=true;});
 })();
 </script>
+
 <script>
 (()=>{'use strict';
 const $=id=>document.getElementById(id);let TASKKEY='',NOTEKEY='',SCHEDKEY='';
