@@ -127,6 +127,18 @@ input,select,textarea,button{max-width:100%;}
 @media(prefers-reduced-motion:reduce){.feedback-announcement,.feedback-announcement:before,.feedback-announcement .feedback-bell{animation:none}}
 
 
+
+/* STUDENT AI CHAT — integrated with Supabase Edge Function */
+.assistant-layout{display:grid;grid-template-columns:minmax(0,1fr) 250px;gap:14px;align-items:start}
+.assistant-chat{padding:0;overflow:hidden;display:flex;flex-direction:column;min-height:520px}
+.assistant-chat-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:17px 19px;border-bottom:1px solid var(--stroke);background:linear-gradient(100deg,#201d42aa,#10333b88)}
+.assistant-title{display:flex;align-items:center;gap:11px;min-width:0}.assistant-orb{width:42px;height:42px;flex:0 0 42px;display:grid;place-items:center;border-radius:14px;background:linear-gradient(135deg,var(--purple),#548dff 60%,var(--cyan));color:#08111b;font-size:20px;box-shadow:0 0 24px #9a7bff2a}
+.assistant-title h3{margin:0;font-size:14px}.assistant-title p{margin:3px 0 0;color:var(--muted);font-size:10px}.assistant-live{font-size:10px;color:var(--green);white-space:nowrap}
+.assistant-messages{flex:1;min-height:300px;max-height:56vh;overflow:auto;padding:18px;display:flex;flex-direction:column;gap:12px;scroll-behavior:smooth}
+.chat-welcome{margin:auto;text-align:center;max-width:430px;padding:22px 10px;color:var(--muted);font-size:12px;line-height:2}.chat-welcome .assistant-orb{margin:0 auto 14px;width:54px;height:54px;font-size:24px}.chat-welcome h3{margin:0 0 7px;color:var(--text);font-size:17px}.chat-message{display:flex;align-items:flex-start;gap:8px;max-width:90%;animation:rise .22s both}.chat-message.user{align-self:flex-start;flex-direction:row-reverse}.chat-message.assistant{align-self:flex-end}.chat-avatar{width:28px;height:28px;flex:0 0 28px;border-radius:9px;display:grid;place-items:center;background:#9a7bff20;color:#d5caff;font-size:12px;border:1px solid #9a7bff30}.chat-message.user .chat-avatar{background:#52e5d119;color:var(--cyan);border-color:#52e5d133}.chat-bubble{padding:11px 13px;border-radius:14px;background:#151f31;border:1px solid #ffffff10;color:#e8eefb;font-size:12px;line-height:1.95;white-space:pre-wrap;overflow-wrap:anywhere;min-width:0}.chat-message.user .chat-bubble{background:linear-gradient(135deg,#272348,#17313b);border-color:#9a7bff30}.chat-typing{color:var(--muted);font-size:11px}.chat-compose{padding:13px;border-top:1px solid var(--stroke);background:#0c1220}.chat-compose form{display:flex;align-items:flex-end;gap:9px}.chat-compose textarea{flex:1;min-width:0;min-height:47px;max-height:140px;resize:vertical;background:#080f1e;border:1px solid #2c3d59;border-radius:12px;padding:12px;color:var(--text);font:inherit;font-size:12px;line-height:1.7;outline:none}.chat-compose textarea:focus{border-color:var(--cyan);box-shadow:0 0 0 3px #52e5d112}.chat-send{flex:0 0 auto;min-height:45px}.chat-send:disabled{opacity:.55;cursor:wait;transform:none}.assistant-prompts{display:grid;gap:8px}.assistant-prompt{width:100%;text-align:right;border:1px solid var(--stroke);border-radius:11px;padding:10px 11px;background:#ffffff04;color:#c8d4e9;font-size:11px;line-height:1.7;transition:.2s}.assistant-prompt:hover{border-color:#52e5d166;background:#52e5d10b;color:white;transform:translateY(-1px)}.assistant-note{font-size:10px;color:var(--muted);line-height:1.9;margin:12px 0 0}.assistant-error{color:#ffb4c0}
+@media(max-width:900px){.assistant-layout{grid-template-columns:minmax(0,1fr)}.assistant-side{order:0}.assistant-prompts{grid-template-columns:repeat(2,minmax(0,1fr))}.assistant-chat{min-height:480px}.assistant-messages{max-height:50vh}}
+@media(max-width:480px){.assistant-chat-head{padding:13px}.assistant-messages{padding:12px;min-height:280px}.chat-message{max-width:96%}.chat-compose{padding:9px}.chat-compose form{gap:6px}.chat-send{padding:10px 12px}.assistant-prompts{grid-template-columns:minmax(0,1fr)}}
+
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -166,6 +178,7 @@ input,select,textarea,button{max-width:100%;}
     <button data-view="tasks"><span class="nav-ico">✓</span> المهام</button>
     <button data-view="schedule"><span class="nav-ico">▦</span> الجدول الأسبوعي</button>
     <button data-view="notes"><span class="nav-ico">✎</span> الملاحظات</button>
+     <button data-view="assistant"><span class="nav-ico">🤖</span> المساعد الذكي</button>
      <button data-view="feedback"><span class="nav-ico">💬</span> الشكاوى والاقتراحات</button>
   </nav>
   <div class="side-bottom"><div class="online"><span class="dot"></span> نظامك الشخصي جاهز</div><p>رتّب يومك، تابع تقدمك، وخلّي كل إنجاز محسوب.</p></div>
@@ -222,6 +235,19 @@ input,select,textarea,button{max-width:100%;}
  </div>
  <p class="footer">رسائلك تُرسل بشكل خاص لإدارة المنصة. برجاء عدم مشاركة كلمات المرور أو أي بيانات سرية.</p>
 </section>
+<section class="view" id="view-assistant">
+ <div class="section-head"><h2>🤖 المساعد الذكي</h2><p>اسأل عن البرمجة والمذاكرة وتنظيم الوقت، وخد شرحًا خطوة بخطوة.</p></div>
+ <div class="assistant-layout">
+  <section class="panel assistant-chat" aria-label="محادثة المساعد الذكي">
+   <div class="assistant-chat-head"><div class="assistant-title"><div class="assistant-orb" aria-hidden="true">✦</div><div><h3>Student OS AI</h3><p>مساعدك الدراسي والبرمجي</p></div></div><span class="assistant-live"><span class="dot" style="display:inline-block;margin-left:5px"></span> جاهز للمساعدة</span></div>
+   <div class="assistant-messages" id="assistantMessages" role="log" aria-live="polite" aria-relevant="additions">
+    <div class="chat-welcome" id="assistantWelcome"><div class="assistant-orb" aria-hidden="true">✦</div><h3>أهلاً بيك يا هندسة 👋</h3><div>أنا المساعد الذكي للمنصة. اسألني عن البرمجة، أو مادة دراسية، أو إزاي تنظم وقتك.</div></div>
+   </div>
+   <div class="chat-compose"><form id="assistantForm"><textarea id="assistantInput" rows="1" maxlength="5000" aria-label="اكتب رسالتك للمساعد" placeholder="اكتب سؤالك هنا..." required></textarea><button class="btn chat-send" id="assistantSend" type="submit">إرسال ←</button></form></div>
+  </section>
+  <aside class="panel assistant-side"><div class="panel-head"><h3>✨ جرّب تسأل</h3></div><div class="assistant-prompts"><button class="assistant-prompt" type="button" data-assistant-prompt="اشرحلي يعني إيه متغير في البرمجة بمثال بسيط">💻 اشرحلي متغير في البرمجة</button><button class="assistant-prompt" type="button" data-assistant-prompt="ساعدني أعمل خطة مذاكرة واقعية لليوم">📚 نظّملي مذاكرتي</button><button class="assistant-prompt" type="button" data-assistant-prompt="اشرحلي إزاي أبدأ أتعلم HTML وCSS خطوة بخطوة">🌐 أبدأ تصميم مواقع إزاي؟</button><button class="assistant-prompt" type="button" data-assistant-prompt="ساعدني أفهم خطأ في كود، وقلّي إيه المعلومات اللي أبعتهالك">🛠️ ساعدني أصلح كود</button></div><p class="assistant-note">تنبيه: إجابات الذكاء الاصطناعي ممكن تحتوي على أخطاء؛ راجع المعلومات المهمة. متبعتش كلمات مرور أو بيانات شخصية حساسة.</p><button class="btn btn-secondary" id="assistantClear" type="button" style="width:100%;margin-top:12px">مسح المحادثة</button></aside>
+ </div>
+</section>
 <div class="footer">DESIGNED FOR <b>ENG / MOHAMED</b> · PERSONAL STUDENT OS</div>
 </main></div>
 <div class="modal-bg" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="modal"><div class="modal-head"><h3 id="modalTitle">مهمة جديدة</h3><button class="close" id="closeModal" aria-label="إغلاق">×</button></div><form id="taskForm"><input type="hidden" id="editId"><div class="form-grid">
@@ -258,7 +284,7 @@ $('addTop').onclick=$('addPage').onclick=()=>openModal();$('closeModal').onclick
 document.addEventListener('click',e=>{let b=e.target.closest('[data-edit],[data-delete],[data-goto]');if(!b)return;if(b.dataset.edit){let t=tasks.find(x=>String(x.id)===b.dataset.edit);if(t)openModal(t)}if(b.dataset.delete){let t=tasks.find(x=>String(x.id)===b.dataset.delete);if(t&&confirm(`تحذف المهمة "${t.title}"؟`)){tasks=tasks.filter(x=>x.id!==t.id);saveTasks();toast('تم حذف المهمة')}}if(b.dataset.goto)go(b.dataset.goto)});
 document.addEventListener('change',e=>{if(e.target.matches('[data-check]')){let t=tasks.find(x=>String(x.id)===e.target.dataset.check);if(t){t.done=e.target.checked;saveTasks();toast(t.done?'عاش يا هندسة! 🎉':'رجّعنا المهمة لقائمة التنفيذ')}}});
 $('search').addEventListener('input',renderTasks);$('filter').addEventListener('change',renderTasks);$('subjectFilter').addEventListener('change',renderTasks);
-const heads={dashboard:'خلّي يومك محسوب.',tasks:'إدارة المهام.',schedule:'خطّط أسبوعك.',notes:'كل أفكارك في مكان واحد.',feedback:'رأيك يطوّر منصتنا. ❤️'};
+const heads={dashboard:'خلّي يومك محسوب.',tasks:'إدارة المهام.',schedule:'خطّط أسبوعك.',notes:'كل أفكارك في مكان واحد.',assistant:'المساعد الذكي 🤖',feedback:'رأيك يطوّر منصتنا. ❤️'};
 function go(v){document.querySelectorAll('.view').forEach(x=>x.classList.toggle('active',x.id==='view-'+v));document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.view===v));$('heading').textContent=heads[v]||heads.dashboard;window.scrollTo({top:0,behavior:'smooth'})}
 document.querySelectorAll('.nav button').forEach(b=>b.addEventListener('click',()=>go(b.dataset.view)));
 const days=['السبت','الأحد','الإثنين','الثلاثاء','الأربعاء','الخميس','الجمعة'];
@@ -303,12 +329,46 @@ $('suggestionForm').addEventListener('submit',e=>{e.preventDefault();sendFeedbac
 const SUPABASE_URL='https://lbvgwdewglkynsxmxtrv.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY='sb_publishable_mrXnjNtl0ju80y8-r-jeQA_kK1wgcbe';
 let supabaseClient=null,authMode='login';
+let assistantHistory=[];
 const gateMsg=(text,type='ok')=>{const el=$('gateMessage');el.textContent=text;el.className='auth-message show '+type};
 const clearGateMsg=()=>{$('gateMessage').textContent='';$('gateMessage').className='auth-message'};
 function setAuthMode(mode){authMode=mode;const signup=mode==='signup';$('gateLoginTab').classList.toggle('active',!signup);$('gateSignupTab').classList.toggle('active',signup);$('gateTitle').textContent=signup?'انضم للمنصة مجانًا 🎓':'أهلاً بيك 👋';$('gateSub').textContent=signup?'اكتب اسمك وإيميلك وأنشئ كلمة مرور لحسابك.':'سجّل دخولك عشان تفتح المنصة.';$('gateNameWrap').style.display=signup?'grid':'none';$('gateName').required=signup;$('gateSubmit').textContent=signup?'إنشاء حساب':'تسجيل الدخول ←';$('gatePassword').autocomplete=signup?'new-password':'current-password';clearGateMsg();}
 function showPlatform(user,withTransition=true){currentUser=user;loadAccountData(user);document.body.classList.add('authenticated');$('authGate').style.display='none';$('feedbackBanner').hidden=false;if(withTransition){$('welcomeTransition').classList.add('show');setTimeout(()=>{$('welcomeTransition').classList.remove('show');$('splash').classList.remove('hide');setTimeout(()=>$('splash').classList.add('hide'),1500)},900)}else{$('splash').classList.add('hide')}const brand=document.querySelector('.topbar .eyebrow');if(brand)brand.textContent='✦ مساحة الطالب · '+(user.user_metadata?.full_name||user.email||'حسابك');}
 function showGate(){document.body.classList.remove('authenticated');$('feedbackBanner').hidden=true;$('authGate').style.display='flex';$('welcomeTransition').classList.remove('show');$('splash').classList.add('hide');setAuthMode('login');}
 try{if(!window.supabase||!window.supabase.createClient){throw new Error('تعذّر تحميل مكتبة تسجيل الدخول. تأكد من اتصال الإنترنت ثم حدّث الصفحة.')}if(!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY){throw new Error('إعدادات Supabase ناقصة في ملف index.html.')}supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);}catch(err){gateMsg(err.message,'err');}
+
+// Student OS AI: calls the secured Supabase Edge Function; the Gemini key stays server-side.
+const assistantMessages=$('assistantMessages');
+function addAssistantBubble(role,text,extraClass=''){
+ const welcome=$('assistantWelcome');if(welcome)welcome.remove();
+ const row=document.createElement('div');row.className='chat-message '+role+(extraClass?' '+extraClass:'');
+ const avatar=document.createElement('div');avatar.className='chat-avatar';avatar.textContent=role==='user'?'أنت':'✦';
+ const bubble=document.createElement('div');bubble.className='chat-bubble';bubble.textContent=text;
+ row.append(avatar,bubble);assistantMessages.appendChild(row);assistantMessages.scrollTop=assistantMessages.scrollHeight;return row;
+}
+function clearAssistantChat(){assistantHistory=[];assistantMessages.innerHTML='<div class="chat-welcome" id="assistantWelcome"><div class="assistant-orb" aria-hidden="true">✦</div><h3>أهلاً بيك يا هندسة 👋</h3><div>أنا المساعد الذكي للمنصة. اسألني عن البرمجة، أو مادة دراسية، أو إزاي تنظم وقتك.</div></div>';}
+async function sendAssistantMessage(message){
+ const clean=String(message||'').trim();if(!clean)return;
+ if(!supabaseClient){addAssistantBubble('assistant','خدمة المساعد مش جاهزة دلوقتي. حدّث الصفحة وجرب تاني.','assistant-error');return;}
+ const priorHistory=assistantHistory.slice(-10);
+ assistantHistory.push({role:'user',text:clean});addAssistantBubble('user',clean);
+ const input=$('assistantInput'),send=$('assistantSend');input.value='';send.disabled=true;send.textContent='جاري الرد...';
+ const typing=addAssistantBubble('assistant','المساعد بيفكر...','chat-typing');
+ try{
+  const {data,error}=await supabaseClient.functions.invoke('student-ai',{body:{message:clean,history:priorHistory}});
+  typing.remove();
+  if(error){let details='';try{if(error.context&&typeof error.context.json==='function'){const body=await error.context.json();details=body?.error||''}}catch{}throw new Error(details||error.message||'تعذر الاتصال بالمساعد. جرّب مرة تانية.');}
+  const reply=typeof data?.reply==='string'?data.reply.trim():'';
+  if(!reply)throw new Error(data?.error||'المساعد مرجعش إجابة. جرّب مرة تانية.');
+  assistantHistory.push({role:'assistant',text:reply});addAssistantBubble('assistant',reply);
+ }catch(err){if(typing.isConnected)typing.remove();addAssistantBubble('assistant','معلش يا هندسة، حصلت مشكلة: '+(err?.message||'تعذر إرسال الرسالة')+'\nجرّب تاني بعد شوية.','assistant-error');}
+ finally{send.disabled=false;send.textContent='إرسال ←';input.focus();}
+}
+$('assistantForm').addEventListener('submit',e=>{e.preventDefault();sendAssistantMessage($('assistantInput').value)});
+$('assistantInput').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();$('assistantForm').requestSubmit()}});
+document.querySelectorAll('[data-assistant-prompt]').forEach(button=>button.addEventListener('click',()=>sendAssistantMessage(button.dataset.assistantPrompt)));
+$('assistantClear').addEventListener('click',clearAssistantChat);
+
 $('gateLoginTab').addEventListener('click',()=>setAuthMode('login'));$('gateSignupTab').addEventListener('click',()=>setAuthMode('signup'));
 $('gateForm').addEventListener('submit',async e=>{e.preventDefault();clearGateMsg();if(!supabaseClient){gateMsg('إعداد تسجيل الدخول مش مكتمل. راجع مفتاح Supabase في ملف الموقع.','err');return;}const btn=$('gateSubmit'),email=$('gateEmail').value.trim(),password=$('gatePassword').value,studentName=$('gateName').value.trim();if(authMode==='signup'&&!studentName){gateMsg('اكتب اسمك الأول عشان نكمل إنشاء الحساب.','err');return;}btn.disabled=true;btn.textContent='لحظة بنراجع بياناتك...';try{if(authMode==='signup'){const {data,error}=await supabaseClient.auth.signUp({email,password,options:{data:{full_name:studentName},emailRedirectTo:'https://mohamedbadr456782-arch.github.io/eng-mohamed-student-os/'}});if(error)throw error;if(data.session&&data.user){gateMsg('الحساب اتعمل بنجاح. بنفتح منصتك دلوقتي ✨','ok');showPlatform(data.user,false);$('introScreen').classList.add('show');}else{setAuthMode('login');$('gateEmail').value=email;gateMsg('الحساب اتعمل. افتح رسالة تأكيد البريد الإلكتروني، وبعد التأكيد ارجع وسجّل الدخول.','ok');}}else{const {data,error}=await supabaseClient.auth.signInWithPassword({email,password});if(error)throw error;if(!data.session||!data.user)throw new Error('تم التحقق لكن مفيش جلسة دخول. جرّب تاني.');gateMsg('تم تسجيل الدخول بنجاح. بنفتح المنصة...','ok');showPlatform(data.user,false);$('introScreen').classList.add('show');}}catch(err){gateMsg(err.message||'حصل خطأ. راجع البريد وكلمة المرور.','err');}finally{btn.disabled=false;btn.textContent=authMode==='signup'?'إنشاء حساب':'تسجيل الدخول ←';}});
 $('gateForgot').addEventListener('click',async()=>{clearGateMsg();if(!supabaseClient){gateMsg('إعداد تسجيل الدخول مش مكتمل.','err');return;}const email=$('gateEmail').value.trim();if(!email){gateMsg('اكتب بريدك الإلكتروني الأول، وبعدها اضغط نسيت كلمة المرور.','err');return;}try{const {error}=await supabaseClient.auth.resetPasswordForEmail(email,{redirectTo:'https://mohamedbadr456782-arch.github.io/eng-mohamed-student-os/'});if(error)throw error;gateMsg('لو البريد مسجل، هتوصلك رسالة استعادة. راجع الوارد والـ Spam.','ok');}catch(err){gateMsg(err.message||'تعذّر إرسال رسالة الاستعادة.','err');}});
