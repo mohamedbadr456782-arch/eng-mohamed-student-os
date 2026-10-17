@@ -89,7 +89,30 @@ input,select,textarea,button{max-width:100%;}
 }
 
 
-/* Announcement strip: isolated and responsive; does not alter the page grid */
+/* ANNOUNCEMENT + FEEDBACK */
+.announcement{display:none;align-items:center;gap:12px;justify-content:space-between;margin:-8px 0 22px;padding:12px 15px;border:1px solid #52e5d144;border-radius:15px;background:linear-gradient(100deg,#211d43,#12333a);box-shadow:0 8px 25px #0002;animation:rise .45s both}
+.announcement.show{display:flex}
+.announcement-copy{font-size:12px;line-height:1.9;min-width:0}
+.announcement-copy strong{color:var(--cyan)}
+.announcement-close{flex:0 0 auto;border:1px solid #ffffff20;border-radius:9px;background:#ffffff0b;color:#dce6f7;padding:5px 10px;font-size:18px}
+.feedback-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.feedback-card{background:linear-gradient(145deg,#111827ef,#0f1523f2);border:1px solid var(--stroke);border-radius:18px;padding:20px;min-width:0}
+.feedback-card h3{margin:0 0 7px;font-size:16px}
+.feedback-card p{margin:0 0 14px;color:var(--muted);font-size:11px;line-height:1.9}
+.feedback-card textarea{width:100%;min-height:145px;resize:vertical}
+.feedback-card .btn{width:100%;margin-top:10px}
+.feedback-contact{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:15px;padding:15px;border:1px solid #25d36635;border-radius:15px;background:#25d3660b}
+.feedback-contact p{margin:0;color:var(--muted);font-size:11px;line-height:1.9}
+.whatsapp-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;border:1px solid #25d36655;background:#25d36618;color:#8af0ae;border-radius:11px;padding:10px 13px;font-size:12px;font-weight:800}
+.feedback-status{display:none;margin-top:10px;border-radius:10px;padding:10px 12px;font-size:11px;line-height:1.8}
+.feedback-status.show{display:block}
+.feedback-status.ok{background:#143c38;border:1px solid #267e6c;color:#c8fff0}
+.feedback-status.err{background:#3a2029;border:1px solid #884052;color:#ffd9e0}
+@media(max-width:760px){.announcement{align-items:flex-start;padding:11px;gap:8px;margin-top:-8px}.announcement-copy{font-size:11px}.feedback-grid{grid-template-columns:minmax(0,1fr)}.feedback-card{padding:16px}.feedback-contact{align-items:flex-start;flex-direction:column}}
+
+
+
+/* Announcement strip: isolated layout, gold attention effect, dismissible */
 .feedback-announcement{position:relative;isolation:isolate;width:100%;min-width:0;display:flex;align-items:center;gap:14px;overflow:hidden;margin:18px 0 20px;padding:14px 54px 14px 18px;border:1px solid #ffc66d99;border-radius:16px;background:linear-gradient(105deg,#3a260d 0%,#342016 48%,#39200f 100%);box-shadow:0 0 0 1px #ffc66d18,0 8px 28px #ffc66d16;animation:feedbackAttention 3.2s ease-in-out infinite;clear:both}
 .feedback-announcement[hidden]{display:none!important}
 .feedback-announcement:before{content:"";position:absolute;z-index:-1;top:-30%;bottom:-30%;left:-45%;width:35%;pointer-events:none;background:linear-gradient(90deg,transparent,#fff4c455,transparent);transform:skewX(-20deg);animation:feedbackSweep 4s ease-in-out infinite}
@@ -102,6 +125,7 @@ input,select,textarea,button{max-width:100%;}
 @keyframes feedbackRing{0%,75%,100%{transform:rotate(0)}79%{transform:rotate(-12deg)}83%{transform:rotate(12deg)}87%{transform:rotate(-8deg)}91%{transform:rotate(0)}}
 @media(max-width:600px){.feedback-announcement{align-items:center;gap:10px;margin:14px 0 17px;padding:12px 46px 12px 12px;border-radius:13px}.feedback-announcement .feedback-bell{width:36px;height:36px;flex-basis:36px;font-size:18px}.feedback-announcement strong{font-size:12px}.feedback-announcement p{font-size:11px;line-height:1.7}.feedback-announcement .feedback-close{left:7px;top:7px;width:27px;height:27px;font-size:18px}}
 @media(prefers-reduced-motion:reduce){.feedback-announcement,.feedback-announcement:before,.feedback-announcement .feedback-bell{animation:none}}
+
 
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -142,20 +166,20 @@ input,select,textarea,button{max-width:100%;}
     <button data-view="tasks"><span class="nav-ico">✓</span> المهام</button>
     <button data-view="schedule"><span class="nav-ico">▦</span> الجدول الأسبوعي</button>
     <button data-view="notes"><span class="nav-ico">✎</span> الملاحظات</button>
+     <button data-view="feedback"><span class="nav-ico">💬</span> الشكاوى والاقتراحات</button>
   </nav>
   <div class="side-bottom"><div class="online"><span class="dot"></span> نظامك الشخصي جاهز</div><p>رتّب يومك، تابع تقدمك، وخلّي كل إنجاز محسوب.</p></div>
 </aside>
 <main>
 <header class="topbar"><div><div class="eyebrow">✦ أهلاً بيك في مساحة إنجازك</div><h1 id="heading">خلّي يومك محسوب.</h1></div><div class="top-actions"><div class="date-pill" id="datePill"></div><button class="btn" id="addTop">＋ مهمة جديدة</button><button class="auth-logout" id="accountLogout" type="button">خروج</button></div></header>
+
 <section class="view active" id="view-dashboard">
  <div class="hero"><div><h2>أهلاً يا باشمهندس 👋</h2><p>ده مركزك الشخصي للدراسة والإنجاز. نظّم واجباتك، خطط أسبوعك، وراقب تقدمك بتصميم معمول مخصوص ليك.</p></div><div class="hero-logo">ENG / <span>M</span></div></div>
-
- <aside class="feedback-announcement" id="feedbackAnnouncement" aria-label="إعلان الشكاوى والاقتراحات">
+ <aside class="feedback-announcement" id="feedbackBanner" hidden aria-label="إعلان الشكاوى والاقتراحات">
   <div class="feedback-bell" aria-hidden="true">📣</div>
   <div class="feedback-copy"><strong>📢 صوتك يفرق معانا!</strong><p>عندك شكوى أو اقتراح لتطوير المنصة؟ رأيك هيساعدنا نخلي تجربتك أحسن.</p></div>
   <button class="feedback-close" id="dismissFeedbackAnnouncement" type="button" aria-label="إخفاء الشريط" title="إخفاء الشريط">×</button>
  </aside>
-
  <div class="stats">
   <div class="stat"><div class="stat-head"><span>إجمالي المهام</span><span class="stat-ico">▤</span></div><strong id="total">0</strong><small>كل المهام المسجلة</small></div>
   <div class="stat"><div class="stat-head"><span>تم إنجازها</span><span class="stat-ico">✓</span></div><strong id="done">0</strong><small>إنجازاتك بتزيد</small></div>
@@ -170,6 +194,34 @@ input,select,textarea,button{max-width:100%;}
 <section class="view" id="view-tasks"><div class="section-head"><h2>إدارة المهام</h2><p>واجباتك، مشاريعك، مواعيدك وأولوياتك في مكان واحد.</p></div><div class="toolbar"><input class="field" id="search" placeholder="⌕ ابحث عن مهمة أو مادة"><select class="field" id="filter"><option value="all">كل المهام</option><option value="pending">غير المكتملة</option><option value="done">المكتملة</option><option value="late">المتأخرة</option></select><select class="field" id="subjectFilter"><option value="all">كل المواد</option></select><button class="btn" id="addPage">＋ إضافة مهمة</button></div><div class="task-manager" id="allTasks"></div></section>
 <section class="view" id="view-schedule"><div class="section-head"><h2>الجدول الأسبوعي</h2><p>اكتب محاضراتك وخطة مذاكرتك لكل يوم. الحفظ تلقائي على جهازك.</p></div><div class="schedule-grid" id="scheduleGrid"></div><p class="footer">الجدول شخصي للتنظيم، وغير متصل بجدول المعهد الرسمي.</p></section>
 <section class="view" id="view-notes"><div class="section-head"><h2>الملاحظات السريعة</h2><p>أفكار المحاضرات وكل التفاصيل اللي محتاج ترجع لها.</p></div><div class="toolbar"><input class="field" id="noteTitle" placeholder="عنوان الملاحظة"><button class="btn" id="newNote">＋ ملاحظة جديدة</button></div><div class="panel" id="noteEditor" style="display:none;margin-bottom:14px"><div class="group"><label for="noteBody">محتوى الملاحظة</label><textarea class="field" id="noteBody" placeholder="اكتب هنا..."></textarea></div><div class="form-actions"><button class="btn" id="saveNote">حفظ الملاحظة</button><button class="btn btn-secondary" id="cancelNote">إلغاء</button></div></div><div class="note-grid" id="notesGrid"></div></section>
+<section class="view" id="view-feedback">
+ <div class="section-head"><h2>💬 الشكاوى والاقتراحات</h2><p>رأيك مهم، ساعدنا نخلي ENG / MOHAMED — Student OS أفضل ليك ولكل الطلاب.</p></div>
+ <div class="feedback-grid">
+  <article class="feedback-card">
+   <h3>🛠️ عندك شكوى أو مشكلة؟</h3>
+   <p>اشرح المشكلة اللي قابلتك في المنصة، وهنراجع رسالتك.</p>
+   <form id="complaintForm">
+    <textarea class="field" id="complaintMessage" maxlength="3000" required placeholder="اكتب الشكوى أو المشكلة بالتفصيل..."></textarea>
+    <button class="btn" type="submit">إرسال الشكوى ←</button>
+    <div class="feedback-status" id="complaintStatus" role="status" aria-live="polite"></div>
+   </form>
+  </article>
+  <article class="feedback-card">
+   <h3>💡 عندك اقتراح للتطوير؟</h3>
+   <p>شاركنا فكرتك أو الميزة اللي تتمنى نضيفها للمنصة.</p>
+   <form id="suggestionForm">
+    <textarea class="field" id="suggestionMessage" maxlength="3000" required placeholder="اكتب اقتراحك هنا..."></textarea>
+    <button class="btn" type="submit">إرسال الاقتراح ✨</button>
+    <div class="feedback-status" id="suggestionStatus" role="status" aria-live="polite"></div>
+   </form>
+  </article>
+ </div>
+ <div class="feedback-contact">
+  <p><strong style="color:var(--text)">📱 محتاج تتواصل مباشرة؟</strong><br>تقدر تبعت رسالة واتساب لصاحب المنصة.</p>
+  <a class="whatsapp-btn" href="https://wa.me/201117279887" target="_blank" rel="noopener noreferrer"><span aria-hidden="true">🟢</span> واتساب · 01117279887</a>
+ </div>
+ <p class="footer">رسائلك تُرسل بشكل خاص لإدارة المنصة. برجاء عدم مشاركة كلمات المرور أو أي بيانات سرية.</p>
+</section>
 <div class="footer">DESIGNED FOR <b>ENG / MOHAMED</b> · PERSONAL STUDENT OS</div>
 </main></div>
 <div class="modal-bg" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="modal"><div class="modal-head"><h3 id="modalTitle">مهمة جديدة</h3><button class="close" id="closeModal" aria-label="إغلاق">×</button></div><form id="taskForm"><input type="hidden" id="editId"><div class="form-grid">
@@ -180,17 +232,6 @@ input,select,textarea,button{max-width:100%;}
 <div class="group"><label for="type">النوع</label><select class="field" id="type"><option>واجب</option><option>مذاكرة</option><option>مشروع</option><option>محاضرة</option><option>امتحان</option><option>أخرى</option></select></div>
 <div class="group full"><label for="details">تفاصيل إضافية</label><textarea class="field" id="details" placeholder="تفاصيل أو خطوات المهمة..."></textarea></div></div><div class="form-actions"><button class="btn" type="submit">حفظ المهمة ✓</button><button class="btn btn-secondary" type="button" id="cancelModal">إلغاء</button></div></form></div></div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
-<script>
-(()=>{
- const banner=document.getElementById('feedbackAnnouncement');
- const close=document.getElementById('dismissFeedbackAnnouncement');
- if(!banner||!close)return;
- // Show on every page load; dismiss only for the current visit.
- banner.hidden=false;
- close.addEventListener('click',()=>{banner.hidden=true;});
-})();
-</script>
-
 <script>
 (()=>{'use strict';
 const $=id=>document.getElementById(id);let TASKKEY='',NOTEKEY='',SCHEDKEY='';
@@ -217,7 +258,7 @@ $('addTop').onclick=$('addPage').onclick=()=>openModal();$('closeModal').onclick
 document.addEventListener('click',e=>{let b=e.target.closest('[data-edit],[data-delete],[data-goto]');if(!b)return;if(b.dataset.edit){let t=tasks.find(x=>String(x.id)===b.dataset.edit);if(t)openModal(t)}if(b.dataset.delete){let t=tasks.find(x=>String(x.id)===b.dataset.delete);if(t&&confirm(`تحذف المهمة "${t.title}"؟`)){tasks=tasks.filter(x=>x.id!==t.id);saveTasks();toast('تم حذف المهمة')}}if(b.dataset.goto)go(b.dataset.goto)});
 document.addEventListener('change',e=>{if(e.target.matches('[data-check]')){let t=tasks.find(x=>String(x.id)===e.target.dataset.check);if(t){t.done=e.target.checked;saveTasks();toast(t.done?'عاش يا هندسة! 🎉':'رجّعنا المهمة لقائمة التنفيذ')}}});
 $('search').addEventListener('input',renderTasks);$('filter').addEventListener('change',renderTasks);$('subjectFilter').addEventListener('change',renderTasks);
-const heads={dashboard:'خلّي يومك محسوب.',tasks:'إدارة المهام.',schedule:'خطّط أسبوعك.',notes:'كل أفكارك في مكان واحد.'};
+const heads={dashboard:'خلّي يومك محسوب.',tasks:'إدارة المهام.',schedule:'خطّط أسبوعك.',notes:'كل أفكارك في مكان واحد.',feedback:'رأيك يطوّر منصتنا. ❤️'};
 function go(v){document.querySelectorAll('.view').forEach(x=>x.classList.toggle('active',x.id==='view-'+v));document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.view===v));$('heading').textContent=heads[v]||heads.dashboard;window.scrollTo({top:0,behavior:'smooth'})}
 document.querySelectorAll('.nav button').forEach(b=>b.addEventListener('click',()=>go(b.dataset.view)));
 const days=['السبت','الأحد','الإثنين','الثلاثاء','الأربعاء','الخميس','الجمعة'];
@@ -229,14 +270,44 @@ $('saveNote').onclick=()=>{let title=$('noteTitle').value.trim(),body=$('noteBod
 $('cancelNote').onclick=()=>{noteEditor(false);editingNote=null};
 $('notesGrid').addEventListener('click',e=>{let ed=e.target.closest('[data-note-edit]'),del=e.target.closest('[data-note-delete]');if(ed){let n=notes.find(n=>n.id===Number(ed.dataset.noteEdit));if(n){editingNote=n.id;$('noteTitle').value=n.title;$('noteBody').value=n.body;noteEditor(true);$('noteBody').focus()}}if(del){let id=Number(del.dataset.noteDelete);if(confirm('تحذف الملاحظة دي؟')){notes=notes.filter(n=>n.id!==id);localStorage.setItem(NOTEKEY,JSON.stringify(notes));renderNotes();toast('الملاحظة اتحذفت')}}});
 $('datePill').textContent=new Date().toLocaleDateString('ar-EG',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+
+function showFeedbackStatus(id,message,type='ok'){const el=$(id);el.textContent=message;el.className='feedback-status show '+type}
+async function sendFeedback(kind,message,statusId,form){
+ const clean=message.trim();
+ if(!clean){showFeedbackStatus(statusId,'اكتب رسالتك الأول وبعدين ابعتها.','err');return}
+ if(!supabaseClient){showFeedbackStatus(statusId,'خدمة الإرسال غير متاحة حاليًا. جرّب واتساب أو حاول لاحقًا.','err');return}
+ const {data:{user},error:authError}=await supabaseClient.auth.getUser();
+ if(authError||!user){showFeedbackStatus(statusId,'سجّل دخولك من جديد قبل إرسال الرسالة.','err');return}
+ const button=form.querySelector('button[type="submit"]');
+ button.disabled=true;button.textContent='جاري الإرسال...';
+ try{
+  const {error}=await supabaseClient.from('student_feedback').insert({
+   user_id:user.id,user_email:user.email||null,
+   student_name:user.user_metadata?.full_name||null,
+   feedback_type:kind,message:clean
+  });
+  if(error)throw error;
+  form.reset();
+  showFeedbackStatus(statusId,kind==='complaint'?'وصلت الشكوى بنجاح، شكرًا إنك بلغتنا ❤️':'وصل اقتراحك بنجاح، شكرًا لمساعدتنا على التطوير ❤️','ok');
+ }catch(err){
+  console.error('Feedback submission failed:',err);
+  showFeedbackStatus(statusId,'مقدرناش نبعت الرسالة دلوقتي. لازم تفعيل جدول الشكاوى في Supabase؛ أو تواصل معنا عبر واتساب.','err');
+ }finally{
+  button.disabled=false;
+  button.textContent=kind==='complaint'?'إرسال الشكوى ←':'إرسال الاقتراح ✨';
+ }
+}
+$('complaintForm').addEventListener('submit',e=>{e.preventDefault();sendFeedback('complaint',$('complaintMessage').value,'complaintStatus',e.currentTarget)});
+$('suggestionForm').addEventListener('submit',e=>{e.preventDefault();sendFeedback('suggestion',$('suggestionMessage').value,'suggestionStatus',e.currentTarget)});
+
 const SUPABASE_URL='https://lbvgwdewglkynsxmxtrv.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY='sb_publishable_mrXnjNtl0ju80y8-r-jeQA_kK1wgcbe';
 let supabaseClient=null,authMode='login';
 const gateMsg=(text,type='ok')=>{const el=$('gateMessage');el.textContent=text;el.className='auth-message show '+type};
 const clearGateMsg=()=>{$('gateMessage').textContent='';$('gateMessage').className='auth-message'};
 function setAuthMode(mode){authMode=mode;const signup=mode==='signup';$('gateLoginTab').classList.toggle('active',!signup);$('gateSignupTab').classList.toggle('active',signup);$('gateTitle').textContent=signup?'انضم للمنصة مجانًا 🎓':'أهلاً بيك 👋';$('gateSub').textContent=signup?'اكتب اسمك وإيميلك وأنشئ كلمة مرور لحسابك.':'سجّل دخولك عشان تفتح المنصة.';$('gateNameWrap').style.display=signup?'grid':'none';$('gateName').required=signup;$('gateSubmit').textContent=signup?'إنشاء حساب':'تسجيل الدخول ←';$('gatePassword').autocomplete=signup?'new-password':'current-password';clearGateMsg();}
-function showPlatform(user,withTransition=true){currentUser=user;loadAccountData(user);document.body.classList.add('authenticated');$('authGate').style.display='none';if(withTransition){$('welcomeTransition').classList.add('show');setTimeout(()=>{$('welcomeTransition').classList.remove('show');$('splash').classList.remove('hide');setTimeout(()=>$('splash').classList.add('hide'),1500)},900)}else{$('splash').classList.add('hide')}const brand=document.querySelector('.topbar .eyebrow');if(brand)brand.textContent='✦ مساحة الطالب · '+(user.user_metadata?.full_name||user.email||'حسابك');}
-function showGate(){document.body.classList.remove('authenticated');$('authGate').style.display='flex';$('welcomeTransition').classList.remove('show');$('splash').classList.add('hide');setAuthMode('login');}
+function showPlatform(user,withTransition=true){currentUser=user;loadAccountData(user);document.body.classList.add('authenticated');$('authGate').style.display='none';$('feedbackBanner').hidden=false;if(withTransition){$('welcomeTransition').classList.add('show');setTimeout(()=>{$('welcomeTransition').classList.remove('show');$('splash').classList.remove('hide');setTimeout(()=>$('splash').classList.add('hide'),1500)},900)}else{$('splash').classList.add('hide')}const brand=document.querySelector('.topbar .eyebrow');if(brand)brand.textContent='✦ مساحة الطالب · '+(user.user_metadata?.full_name||user.email||'حسابك');}
+function showGate(){document.body.classList.remove('authenticated');$('feedbackBanner').hidden=true;$('authGate').style.display='flex';$('welcomeTransition').classList.remove('show');$('splash').classList.add('hide');setAuthMode('login');}
 try{if(!window.supabase||!window.supabase.createClient){throw new Error('تعذّر تحميل مكتبة تسجيل الدخول. تأكد من اتصال الإنترنت ثم حدّث الصفحة.')}if(!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY){throw new Error('إعدادات Supabase ناقصة في ملف index.html.')}supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);}catch(err){gateMsg(err.message,'err');}
 $('gateLoginTab').addEventListener('click',()=>setAuthMode('login'));$('gateSignupTab').addEventListener('click',()=>setAuthMode('signup'));
 $('gateForm').addEventListener('submit',async e=>{e.preventDefault();clearGateMsg();if(!supabaseClient){gateMsg('إعداد تسجيل الدخول مش مكتمل. راجع مفتاح Supabase في ملف الموقع.','err');return;}const btn=$('gateSubmit'),email=$('gateEmail').value.trim(),password=$('gatePassword').value,studentName=$('gateName').value.trim();if(authMode==='signup'&&!studentName){gateMsg('اكتب اسمك الأول عشان نكمل إنشاء الحساب.','err');return;}btn.disabled=true;btn.textContent='لحظة بنراجع بياناتك...';try{if(authMode==='signup'){const {data,error}=await supabaseClient.auth.signUp({email,password,options:{data:{full_name:studentName},emailRedirectTo:'https://mohamedbadr456782-arch.github.io/eng-mohamed-student-os/'}});if(error)throw error;if(data.session&&data.user){gateMsg('الحساب اتعمل بنجاح. بنفتح منصتك دلوقتي ✨','ok');showPlatform(data.user,false);$('introScreen').classList.add('show');}else{setAuthMode('login');$('gateEmail').value=email;gateMsg('الحساب اتعمل. افتح رسالة تأكيد البريد الإلكتروني، وبعد التأكيد ارجع وسجّل الدخول.','ok');}}else{const {data,error}=await supabaseClient.auth.signInWithPassword({email,password});if(error)throw error;if(!data.session||!data.user)throw new Error('تم التحقق لكن مفيش جلسة دخول. جرّب تاني.');gateMsg('تم تسجيل الدخول بنجاح. بنفتح المنصة...','ok');showPlatform(data.user,false);$('introScreen').classList.add('show');}}catch(err){gateMsg(err.message||'حصل خطأ. راجع البريد وكلمة المرور.','err');}finally{btn.disabled=false;btn.textContent=authMode==='signup'?'إنشاء حساب':'تسجيل الدخول ←';}});
@@ -245,6 +316,8 @@ $('accountLogout').addEventListener('click',async()=>{if(!supabaseClient)return;
 $('enterPlatformBtn').addEventListener('click',()=>{$('introScreen').classList.remove('show');$('splash').classList.remove('hide');setTimeout(()=>$('splash').classList.add('hide'),900);});
 if(supabaseClient){supabaseClient.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_OUT'){currentUser=null;showGate();}});supabaseClient.auth.getSession().then(({data,error})=>{if(!error&&data.session&&data.session.user)showPlatform(data.session.user,false);else showGate();}).catch(()=>showGate());}else{showGate();}
 })();
+<script>
+(()=>{const banner=document.getElementById('feedbackBanner');const close=document.getElementById('dismissFeedbackAnnouncement');if(!banner||!close)return;close.addEventListener('click',()=>{banner.hidden=true;});})();
 </script>
 </body>
 </html>
